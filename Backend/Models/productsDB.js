@@ -5,4 +5,52 @@ const getProductsDB = async () => {
   return rows;
 };
 
-export { getProductsDB };
+const getProductBewertungDb = async (id) => {
+  try {
+    const { rows } = await query(
+      `SELECT b_id,
+       titel,
+       beschreibung,
+       p_id,
+       anzahl_sterne,
+       vorname,
+       nachname,
+       email
+from bewertung
+         JOIN kunde k on k.knd_id = bewertung.k_id
+WHERE p_id = $1;`,
+      [id],
+    );
+
+    const erg = await getAnzahlBewertungen();
+
+    let objReturn = {
+      stats: erg,
+      bewertungen: rows,
+    };
+
+    console.log(objReturn);
+
+    return objReturn;
+  } catch (error) {
+    console.log(error.message);
+    return null;
+  }
+};
+
+const getAnzahlBewertungen = async () => {
+  let erg = [];
+
+  for (let index = 1; index < 6; index++) {
+    const { rows } = await query(
+      `SELECT count(*) as "Sum" from bewertung WHERE anzahl_sterne = $1;`,
+      [index],
+    );
+
+    erg.push(rows[0]);
+  }
+
+  return erg;
+};
+
+export { getProductsDB, getProductBewertungDb };
