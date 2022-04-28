@@ -22,7 +22,7 @@ WHERE p_id = $1;`,
       [id],
     );
 
-    const erg = await getAnzahlBewertungen();
+    const erg = await getAnzahlBewertungen(id);
 
     let objReturn = {
       stats: erg,
@@ -38,13 +38,13 @@ WHERE p_id = $1;`,
   }
 };
 
-const getAnzahlBewertungen = async () => {
+const getAnzahlBewertungen = async (p_id) => {
   let erg = [];
 
   for (let index = 1; index < 6; index++) {
     const { rows } = await query(
-      `SELECT count(*) as "Sum" from bewertung WHERE anzahl_sterne = $1;`,
-      [index],
+      `SELECT count(*) as "Sum" from bewertung WHERE anzahl_sterne = $1 and p_id = $2;`,
+      [index, p_id],
     );
 
     erg.push(rows[0]);

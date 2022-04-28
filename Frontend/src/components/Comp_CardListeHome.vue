@@ -43,7 +43,6 @@ let products = ref([]);
 
 const { data } = await axios.get('http://localhost:2410/products');
 products.value = data;
-console.log(products.value);
 
 function productDetail(product) {
   try {

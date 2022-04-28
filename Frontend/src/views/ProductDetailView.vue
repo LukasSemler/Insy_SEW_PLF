@@ -6,28 +6,6 @@
     >
       <!-- Product details -->
       <div class="lg:max-w-lg lg:self-end">
-        <!-- <nav aria-label="Breadcrumb">
-          <ol role="list" class="flex items-center space-x-2">
-            <li v-for="(breadcrumb, breadcrumbIdx) in product.breadcrumbs" :key="breadcrumb.id">
-              <div class="flex items-center text-sm">
-                <a :href="breadcrumb.href" class="font-medium text-gray-500 hover:text-gray-900">
-                  {{ breadcrumb.name }}
-                </a>
-                <svg
-                  v-if="breadcrumbIdx !== product.breadcrumbs.length - 1"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  class="ml-2 flex-shrink-0 h-5 w-5 text-gray-300"
-                >
-                  <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
-                </svg>
-              </div>
-            </li>
-          </ol>
-        </nav> -->
-
         <div class="mt-4">
           <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
             {{ productNeu.titel }}
@@ -38,7 +16,7 @@
           <h2 id="information-heading" class="sr-only">Product information</h2>
 
           <div class="flex items-center">
-            <p class="text-lg text-gray-900 sm:text-xl">{{ productNeu.preis }}</p>
+            <p class="text-lg text-gray-900 sm:text-xl">{{ productNeu.preis }}€</p>
 
             <div class="ml-4 pl-4 border-l border-gray-300">
               <h2 class="sr-only">Reviews</h2>
@@ -49,15 +27,15 @@
                       v-for="rating in [0, 1, 2, 3, 4]"
                       :key="rating"
                       :class="[
-                        reviews.average > rating ? 'text-yellow-400' : 'text-gray-300',
+                        durchschnittBewertung > rating ? 'text-yellow-400' : 'text-gray-300',
                         'h-5 w-5 flex-shrink-0',
                       ]"
                       aria-hidden="true"
                     />
                   </div>
-                  <p class="sr-only">{{ reviews.average }} out of 5 stars</p>
+                  <p class="sr-only">{{ durchschnittBewertung }} out of 5 stars</p>
                 </div>
-                <p class="ml-2 text-sm text-gray-500">{{ reviews.totalCount }} reviews</p>
+                <p class="ml-2 text-sm text-gray-500">{{ anzahlBewertungen }} reviews</p>
               </div>
             </div>
           </div>
@@ -134,6 +112,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import axios from 'axios';
 
 // Tailwind Imports
 import { CheckIcon, StarIcon } from '@heroicons/vue/solid';
@@ -143,6 +122,10 @@ import { ShieldCheckIcon } from '@heroicons/vue/outline';
 import Comp_Bewertungen from '../components/Comp_Bewertungen.vue';
 
 let productNeu = ref(null);
+let bewertungen = ref([]);
+let stats = ref([]);
+let anzahlBewertungen = ref(0);
+let durchschnittBewertung = ref(0);
 
 const reviews = { average: 4, totalCount: 1624 };
 
@@ -151,6 +134,28 @@ onMounted(async () => {
     // Produkt aus dem LS holen
     let product = JSON.parse(localStorage.getItem('productDetail'));
     productNeu.value = product;
+
+    // Bewertungen vom Server holen
+    const { data } = await axios.get(
+      `http://localhost:2410/productBewertung/${productNeu.value.p_id}`,
+    );
+    bewertungen.value = data.bewertungen;
+    stats.value = data.stats;
+
+    //Anzahl der Bewertungen berechnen
+    for (let index = 0; index < stats.value.length; index++) {
+      anzahlBewertungen.value += Number(stats.value[index].Sum);
+    }
+
+    // Durchschnitt von allen Bewertungen berechen
+    durchschnittBewertung.value += Number(stats.value[0].Sum) * 1;
+    durchschnittBewertung.value += Number(stats.value[1].Sum) * 2;
+    durchschnittBewertung.value += Number(stats.value[2].Sum) * 3;
+    durchschnittBewertung.value += Number(stats.value[3].Sum) * 4;
+    durchschnittBewertung.value += Number(stats.value[4].Sum) * 5;
+
+    durchschnittBewertung.value /= 5;
+    durchschnittBewertung.value = Math.round(durchschnittBewertung.value);
   } catch (error) {
     console.error(error.message);
   }
