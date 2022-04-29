@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="text-4xl text-center">Login Register</h1>
+    <!-- <h1 class="text-4xl text-center">Login Register</h1> -->
   </div>
   <RouterView></RouterView>
 </template>
