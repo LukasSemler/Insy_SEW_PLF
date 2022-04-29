@@ -232,23 +232,28 @@
               <!-- Contact form -->
               <div class="py-10 px-6 sm:px-10 lg:col-span-2 xl:p-12">
                 <h3 class="text-lg font-medium text-warm-gray-900">Send us a message</h3>
-                <form
-                  action="#"
-                  method="POST"
-                  class="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8"
-                >
+                <form class="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
                   <div>
                     <label for="first-name" class="block text-sm font-medium text-warm-gray-900"
                       >First name</label
                     >
                     <div class="mt-1">
                       <input
+                        v-model="state.vorname"
                         type="text"
                         name="first-name"
                         id="first-name"
                         autocomplete="given-name"
                         class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300 rounded-md"
                       />
+
+                      <p
+                        v-if="v$.vorname.$invalid"
+                        class="mt-2 text-sm text-red-600"
+                        id="email-error"
+                      >
+                        {{ v$.vorname.$silentErrors[0].$message }}
+                      </p>
                     </div>
                   </div>
                   <div>
@@ -257,12 +262,20 @@
                     >
                     <div class="mt-1">
                       <input
+                        v-model="state.nachname"
                         type="text"
                         name="last-name"
                         id="last-name"
                         autocomplete="family-name"
                         class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300 rounded-md"
                       />
+                      <p
+                        v-if="v$.nachname.$invalid"
+                        class="mt-2 text-sm text-red-600"
+                        id="email-error"
+                      >
+                        {{ v$.nachname.$silentErrors[0].$message }}
+                      </p>
                     </div>
                   </div>
                   <div>
@@ -271,12 +284,20 @@
                     >
                     <div class="mt-1">
                       <input
+                        v-model="state.emailAddr"
                         id="email"
                         name="email"
                         type="email"
                         autocomplete="email"
                         class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300 rounded-md"
                       />
+                      <p
+                        v-if="v$.emailAddr.$invalid"
+                        class="mt-2 text-sm text-red-600"
+                        id="email-error"
+                      >
+                        {{ v$.emailAddr.$silentErrors[0].$message }}
+                      </p>
                     </div>
                   </div>
                   <div>
@@ -288,6 +309,7 @@
                     </div>
                     <div class="mt-1">
                       <input
+                        v-model="state.telNr"
                         type="text"
                         name="phone"
                         id="phone"
@@ -295,6 +317,9 @@
                         class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300 rounded-md"
                         aria-describedby="phone-optional"
                       />
+                      <span v-if="v$.telNr.$invalid">
+                        {{ v$.telNr.$silentErrors[0].$message }}
+                      </span>
                     </div>
                   </div>
                   <div class="sm:col-span-2">
@@ -303,11 +328,19 @@
                     >
                     <div class="mt-1">
                       <input
+                        v-model="state.betreff"
                         type="text"
                         name="subject"
                         id="subject"
                         class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300 rounded-md"
                       />
+                      <p
+                        v-if="v$.betreff.$invalid"
+                        class="mt-2 text-sm text-red-600"
+                        id="email-error"
+                      >
+                        {{ v$.betreff.$silentErrors[0].$message }}
+                      </p>
                     </div>
                   </div>
                   <div class="sm:col-span-2">
@@ -321,18 +354,36 @@
                     </div>
                     <div class="mt-1">
                       <textarea
+                        v-model="state.nachricht"
                         id="message"
                         name="message"
                         rows="4"
                         class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border border-warm-gray-300 rounded-md"
                         aria-describedby="message-max"
                       />
+                      <p
+                        v-if="v$.nachricht.$invalid"
+                        class="mt-2 text-sm text-red-600"
+                        id="email-error"
+                      >
+                        {{ v$.nachricht.$silentErrors[0].$message }}
+                      </p>
                     </div>
                   </div>
                   <div class="sm:col-span-2 sm:flex sm:justify-end">
                     <button
-                      type="submit"
+                      v-if="!checkError"
+                      :disabled="checkError"
+                      @click="submitForm"
                       class="mt-2 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-teal-500 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:w-auto"
+                    >
+                      Submit
+                    </button>
+                    <button
+                      v-else
+                      :disabled="checkError"
+                      @click="submitForm"
+                      class="mt-2 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:w-auto"
                     >
                       Submit
                     </button>
@@ -370,6 +421,12 @@
 
 <script setup>
 import { MailIcon, PhoneIcon } from '@heroicons/vue/outline';
+import { computed, reactive } from 'vue';
+
+// Vuelidate Imports
+import useValidate from '@vuelidate/core';
+import { required, email, maxLength } from '@vuelidate/validators';
+import axios from 'axios';
 
 const offices = [
   { id: 1, city: 'Los Angeles', address: ['4556 Brendan Ferry', 'Los Angeles, CA 90210'] },
@@ -377,4 +434,49 @@ const offices = [
   { id: 3, city: 'Toronto', address: ['7363 Cynthia Pass', 'Toronto, ON N3Y 4H8'] },
   { id: 4, city: 'London', address: ['114 Cobble Lane', 'London N1 2EF'] },
 ];
+
+// Inputs
+let state = reactive({
+  vorname: '',
+  nachname: '',
+  emailAddr: '',
+  telNr: '',
+  betreff: '',
+  nachricht: '',
+});
+
+// Rules for vuelidate
+const rules = computed(() => {
+  return {
+    vorname: { required },
+    nachname: { required },
+    emailAddr: { required, email },
+    telNr: {},
+    betreff: { required },
+    nachricht: { required, maxLength: maxLength(500) },
+  };
+});
+
+const v$ = useValidate(rules, state);
+
+async function submitForm(e) {
+  try {
+    v$.value.$validate();
+
+    if (!v$.value.$error) {
+      const res = await axios.post('http://localhost:2410/sendContactForm', state);
+      console.log('res', res);
+    } else {
+      console.log('Fehler');
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  e.preventDefault();
+}
+
+const checkError = computed(() => {
+  return v$.value.$invalid == true ? true : false;
+});
 </script>
