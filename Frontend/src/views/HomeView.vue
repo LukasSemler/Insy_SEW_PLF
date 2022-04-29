@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>Hello</h1>
+  <div class="bg-gray-50">
+    <Comp_HomeHeader></Comp_HomeHeader>
     <Suspense>
       <template #default>
         <Comp_CardListeHome></Comp_CardListeHome>
@@ -14,4 +14,5 @@
 
 <script setup>
 import Comp_CardListeHome from '../components/Comp_CardListeHome.vue';
+import Comp_HomeHeader from '../components/Comp_HomeHeader.vue';
 </script>
