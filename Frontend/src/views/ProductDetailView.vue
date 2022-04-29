@@ -127,8 +127,6 @@ let stats = ref([]);
 let anzahlBewertungen = ref(0);
 let durchschnittBewertung = ref(0);
 
-const reviews = { average: 4, totalCount: 1624 };
-
 onMounted(async () => {
   try {
     // Produkt aus dem LS holen

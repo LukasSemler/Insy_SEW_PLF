@@ -2,7 +2,7 @@
   <div class="bg-white">
     <main class="overflow-hidden">
       <!-- Header -->
-      <div class="bg-warm-gray-50">
+      <div class="bg-white">
         <div class="py-24 lg:py-32">
           <div class="relative z-10 max-w-7xl mx-auto pl-4 pr-8 sm:px-6 lg:px-8">
             <h1
@@ -20,7 +20,7 @@
 
       <!-- Contact section -->
       <section class="relative bg-white" aria-labelledby="contact-heading">
-        <div class="absolute w-full h-1/2 bg-warm-gray-50" aria-hidden="true" />
+        <div class="absolute w-full h-1/2 bg-white" aria-hidden="true" />
         <!-- Decorative dot pattern -->
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <svg
@@ -45,7 +45,7 @@
                   y="0"
                   width="4"
                   height="4"
-                  class="text-warm-gray-200"
+                  class="text-warm-gray-300"
                   fill="currentColor"
                 />
               </pattern>
