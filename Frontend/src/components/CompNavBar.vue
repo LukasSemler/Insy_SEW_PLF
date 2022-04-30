@@ -54,7 +54,7 @@
         </div>
         <div class="grow"></div>
         <div class="flex items-center">
-          <div v-if="!aktiverUser" class="flex-shrink-0">
+          <div v-if="aktiverUser.kn_id == 0" class="flex-shrink-0">
             <button
               @click="anmelden"
               type="button"
@@ -130,7 +130,6 @@
 
     <DisclosurePanel class="md:hidden">
       <div class="pt-2 pb-3 space-y-1">
-       
         <DisclosureButton
           as="a"
           href="#"
@@ -173,7 +172,7 @@
         <div class="mt-3 space-y-1">
           <DisclosureButton
             as="a"
-            href="#"
+            @click="router.push('/account')"
             class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 sm:px-6"
             >Your Profile</DisclosureButton
           >
@@ -209,7 +208,7 @@ import {
 import { MenuIcon, XIcon } from '@heroicons/vue/outline';
 
 // Vue Imports
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 
 // Router imports
 import { useRouter } from 'vue-router';
@@ -220,10 +219,16 @@ const store = PiniaStore();
 
 const router = useRouter();
 
-let aktiverUser = ref(null);
+let aktiverUser = { kn_id: 0 };
 
 onMounted(() => {
   aktiverUser.value = store.getAktivenUser;
+  console.log(aktiverUser.value.id);
+});
+
+watch(store.getAktivenUser, (newValue, oldValue) => {
+  console.log(newValue, 'newVal');
+  aktiverUser.value = newValue;
 });
 
 function anmelden() {

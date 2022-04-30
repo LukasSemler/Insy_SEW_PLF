@@ -7,6 +7,7 @@ import Comp_Register from '../components/Comp_Register.vue';
 import NotFoundView from '../views/NotFoundView.vue';
 import ShoppingCartView from '../views/ShoppingCartView.vue';
 import CheckoutView from '../views/CheckoutView.vue';
+import AccountView from '../views/AccountView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,11 @@ const router = createRouter({
       path: '/checkout',
       name: 'checkout',
       component: CheckoutView,
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: AccountView,
     },
     {
       path: '/contact',

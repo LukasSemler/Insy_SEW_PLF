@@ -40,6 +40,7 @@ const validate = validator({
 const sendContact = async (req, res) => {
   if (!validate(req.body)) return res.status(400).send(validate.errors);
   const nachricht = await sendContactDB(req.body);
+
   return res.status(201).json(nachricht);
 };
 

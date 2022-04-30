@@ -16,14 +16,27 @@ function SaveState(abmelden) {
 export const PiniaStore = defineStore('electronicCity', {
   //State
   state: () => ({
-    aktiverUser: null,
+    aktiverUser: { kn_id: 0 },
+    counter: 0,
   }),
   //Getter
   getters: {
     getAktivenUser() {
       return this.aktiverUser;
     },
+    getCounter() {
+      return this.counter;
+    },
   },
   //Actions
-  actions: {},
+  actions: {
+    setAktivenUser(user) {
+      this.aktiverUser = user;
+
+      // SaveState();
+    },
+    increment() {
+      this.counter++;
+    },
+  },
 });
