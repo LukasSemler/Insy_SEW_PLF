@@ -67,26 +67,24 @@
         <section aria-labelledby="options-heading">
           <h2 id="options-heading" class="sr-only">Product options</h2>
 
-          <form>
-            <div class="sm:flex sm:justify-between"></div>
-            <div class="mt-10">
-              <button
-                type="submit"
-                class="w-full bg-teal-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-teal-500"
-              >
-                Add to bag
-              </button>
-            </div>
-            <div class="mt-6 text-center">
-              <a href="#" class="group inline-flex text-base font-medium">
-                <ShieldCheckIcon
-                  class="flex-shrink-0 mr-2 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-                  aria-hidden="true"
-                />
-                <span class="text-gray-500 hover:text-gray-700">Lifetime Guarantee</span>
-              </a>
-            </div>
-          </form>
+          <div class="sm:flex sm:justify-between"></div>
+          <div class="mt-10">
+            <button
+              @click="addToCart(productNeu)"
+              class="w-full bg-teal-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-teal-500"
+            >
+              Add to bag
+            </button>
+          </div>
+          <div class="mt-6 text-center">
+            <a href="#" class="group inline-flex text-base font-medium">
+              <ShieldCheckIcon
+                class="flex-shrink-0 mr-2 h-6 w-6 text-gray-400 group-hover:text-gray-500"
+                aria-hidden="true"
+              />
+              <span class="text-gray-500 hover:text-gray-700">Lifetime Guarantee</span>
+            </a>
+          </div>
         </section>
       </div>
     </div>
@@ -120,6 +118,10 @@ import { ShieldCheckIcon } from '@heroicons/vue/outline';
 
 // Component Imports
 import Comp_Bewertungen from '../components/Comp_Bewertungen.vue';
+
+// Store imports
+import { PiniaStore } from '../Store/Store.js';
+const store = PiniaStore();
 
 let productNeu = ref(null);
 let bewertungen = ref([]);
@@ -158,4 +160,32 @@ onMounted(async () => {
     console.error(error.message);
   }
 });
+
+function addToCart(product) {
+  if (!store.getAktivenUser) console.log('nicht angemeldet');
+  else {
+    try {
+      //Warenkorb vom LS holen
+      let warenkorb = JSON.parse(localStorage.getItem('Warenkorb'));
+
+      //Produkt in den Warenkorb legen
+      warenkorb.push(product);
+
+      //Neuen Warenkorb im LS speichern
+      localStorage.setItem('Warenkorb', JSON.stringify(warenkorb));
+    } catch (error) {
+      console.log(error);
+
+      //Warenkorb mit Produkt erstellen
+      let warenkorb = [
+        {
+          product,
+        },
+      ];
+
+      //Warenklog im LS speichern
+      localStorage.setItem('Warenkorb', JSON.stringify(warenkorb));
+    }
+  }
+}
 </script>
