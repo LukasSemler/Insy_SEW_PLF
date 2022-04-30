@@ -1,4 +1,98 @@
 <template>
+  <!-- Success Ding anzeigen -->
+  <!-- Global notification live region, render this permanently at the end of the document -->
+  <div
+    aria-live="assertive"
+    class="fixed inset-0 flex items-end px-4 py-6 pointer-events-none sm:p-6 sm:items-start z-40"
+  >
+    <div class="w-full flex flex-col items-center space-y-4 sm:items-end">
+      <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
+      <transition
+        enter-active-class="transform ease-out duration-300 transition"
+        enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+        enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+        leave-active-class="transition ease-in duration-100"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div
+          v-if="show"
+          class="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden"
+        >
+          <div class="p-4">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <CheckCircleIcon class="h-6 w-6 text-green-400" aria-hidden="true" />
+              </div>
+              <div class="ml-3 w-0 flex-1 pt-0.5">
+                <p class="text-sm font-medium text-gray-900">Successfully Sent!</p>
+                <p class="mt-1 text-sm text-gray-500">You sent successfully the message</p>
+              </div>
+              <div class="ml-4 flex-shrink-0 flex">
+                <button
+                  @click="show = false"
+                  class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                >
+                  <span class="sr-only">Close</span>
+                  <XIcon class="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </div>
+  </div>
+
+  <!-- Error dings anzeigen -->
+  <!-- Global notification live region, render this permanently at the end of the document -->
+  <div
+    aria-live="assertive"
+    class="fixed inset-0 flex items-end px-4 py-6 pointer-events-none sm:p-6 sm:items-start z-40"
+  >
+    <div class="w-full flex flex-col items-center space-y-4 sm:items-end">
+      <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
+      <transition
+        enter-active-class="transform ease-out duration-300 transition"
+        enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+        enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+        leave-active-class="transition ease-in duration-100"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div
+          v-if="showError"
+          class="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden"
+        >
+          <div class="p-4">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <XCircleIcon class="h-6 w-6 text-red-500" aria-hidden="true" />
+              </div>
+              <div class="ml-3 w-0 flex-1 pt-0.5">
+                <p class="text-sm font-medium text-gray-900">Error</p>
+                <p class="mt-1 text-sm text-gray-500">
+                  There was an error when sending your message
+                </p>
+              </div>
+              <div class="ml-4 flex-shrink-0 flex">
+                <button
+                  @click="showError = false"
+                  class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                >
+                  <span class="sr-only">Close</span>
+                  <XIcon class="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </div>
+  </div>
+
+  <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
+
   <div class="bg-white">
     <main class="overflow-hidden">
       <!-- Header -->
@@ -382,7 +476,6 @@
                     <button
                       v-else
                       :disabled="checkError"
-                      @click="submitForm"
                       class="mt-2 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:w-auto"
                     >
                       Submit
@@ -420,6 +513,9 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/vue/outline';
+import { XIcon } from '@heroicons/vue/solid';
 import { MailIcon, PhoneIcon } from '@heroicons/vue/outline';
 import { computed, reactive } from 'vue';
 
@@ -428,6 +524,7 @@ import useValidate from '@vuelidate/core';
 import { required, email, maxLength } from '@vuelidate/validators';
 import axios from 'axios';
 
+// Offices Anzeigen
 const offices = [
   { id: 1, city: 'Los Angeles', address: ['4556 Brendan Ferry', 'Los Angeles, CA 90210'] },
   { id: 2, city: 'New York', address: ['886 Walter Streets', 'New York, NY 12345'] },
@@ -435,12 +532,15 @@ const offices = [
   { id: 4, city: 'London', address: ['114 Cobble Lane', 'London N1 2EF'] },
 ];
 
+let show = ref(false);
+let showError = ref(false);
+
 // Inputs
 let state = reactive({
   vorname: '',
   nachname: '',
   emailAddr: '',
-  telNr: '',
+  telNr: null,
   betreff: '',
   nachricht: '',
 });
@@ -460,23 +560,41 @@ const rules = computed(() => {
 const v$ = useValidate(rules, state);
 
 async function submitForm(e) {
+  e.preventDefault();
   try {
     v$.value.$validate();
 
     if (!v$.value.$error) {
-      const res = await axios.post('http://localhost:2410/sendContactForm', state);
-      console.log('res', res);
+      state.date = getDate();
+      const res = await axios.post('http://localhost:2410/contact', state);
+      console.log(res);
+      if (res.status == 201) show.value = true;
+      else showError.value = true;
+
+      setInterval(() => {
+        show.value = false;
+        showError.value = false;
+      }, 5000);
     } else {
       console.log('Fehler');
     }
-  } catch (error) {
-    console.log(error.message);
-  }
 
-  e.preventDefault();
+    e.preventDefault();
+  } catch (error) {
+    e.preventDefault();
+    console.log(error.message);
+  } finally {
+    e.preventDefault();
+  }
 }
 
 const checkError = computed(() => {
   return v$.value.$invalid == true ? true : false;
 });
+
+function getDate() {
+  let date = new Date();
+
+  return `${date.getFullYear()}-0${date.getMonth() + 1}-${date.getDate()}`;
+}
 </script>

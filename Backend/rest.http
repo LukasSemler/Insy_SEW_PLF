@@ -1,1 +1,17 @@
 GET http://localhost:2410/products
+
+#############
+
+
+POST http://localhost:2410/contact
+Content-Type: application/json
+
+{
+  "vorname": "Lukas",
+  "nachname": "Semler",
+  "emailAddr": "lukas.semler@gmail.com", 
+  "betreff": "Das ist ein betreff", 
+  "nachricht": "Das ist eine Nachricht", 
+  "date": "2022-04-30"
+
+}

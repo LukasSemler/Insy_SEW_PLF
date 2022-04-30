@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import path from 'path';
 import cors from 'cors';
+import { ErrorHandler, NotFoundHandler } from './Middleware/index.js';
 
 import routes from './Router/routes.js';
 
@@ -21,6 +22,9 @@ app.use(express.static(path.join(dirname, '/public')));
 app.use(express.json());
 
 app.use('/', routes);
+
+app.use(ErrorHandler);
+app.use(NotFoundHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
