@@ -6,6 +6,7 @@
           <aside class="py-6 lg:col-span-3">
             <nav class="space-y-1">
               <a
+                @click="router.push(item.link)"
                 v-for="item in subNavigation"
                 :key="item.name"
                 :href="item.href"
@@ -145,6 +146,9 @@
 
 <script setup>
 import { CogIcon, KeyIcon, UserCircleIcon, ReplyIcon } from '@heroicons/vue/outline';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const user = {
   name: 'Debbie Lewis',
@@ -155,9 +159,15 @@ const user = {
 };
 
 const subNavigation = [
-  { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: true },
-  { name: 'Account', href: '#', icon: CogIcon, current: false },
-  { name: 'Password', href: '#', icon: KeyIcon, current: false },
-  { name: 'Bestell-Historie', href: '#', icon: ReplyIcon, current: false },
+  { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: false, link: '/account' },
+  { name: 'Account', href: '#', icon: CogIcon, current: true, link: '/account/account' },
+  { name: 'Password', href: '#', icon: KeyIcon, current: false, link: '/account/password' },
+  {
+    name: 'Bestell-Historie',
+    href: '#',
+    icon: ReplyIcon,
+    current: false,
+    link: '/account/history',
+  },
 ];
 </script>

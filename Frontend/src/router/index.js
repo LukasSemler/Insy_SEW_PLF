@@ -10,6 +10,7 @@ import CheckoutView from '../views/CheckoutView.vue';
 import AccountView from '../views/AccountView.vue';
 
 import uebersichtSubView from '../views/SubViews/uebersichtSubView.vue';
+import accountSubView from '../views/SubViews/accountSubView.vue';
 
 import { PiniaStore } from '../Store/Store.js';
 
@@ -66,7 +67,7 @@ const router = createRouter({
       name: 'account',
       children: [
         { path: '', component: uebersichtSubView },
-        { path: 'account', component: uebersichtSubView },
+        { path: 'account', component: accountSubView },
         { path: 'password', component: uebersichtSubView },
         { path: 'history', component: uebersichtSubView },
       ],
