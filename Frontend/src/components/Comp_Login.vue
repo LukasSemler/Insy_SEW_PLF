@@ -101,7 +101,7 @@
             <div class="text-sm">
               <a
                 @click="router.push('/loginregister/register')"
-                class="font-medium text-teal-600 hover:text-teal-500"
+                class="font-medium text-teal-600 hover:text-teal-500 underline"
               >
                 Erstellen Sie ein Konto
               </a>

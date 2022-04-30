@@ -9,6 +9,8 @@ import ShoppingCartView from '../views/ShoppingCartView.vue';
 import CheckoutView from '../views/CheckoutView.vue';
 import AccountView from '../views/AccountView.vue';
 
+import { PiniaStore } from '../Store/Store.js';
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -35,16 +37,40 @@ const router = createRouter({
       path: '/shoppingCart',
       name: 'shoppingCart',
       component: ShoppingCartView,
+      beforeEnter: (to, from, next) => {
+        const store = PiniaStore();
+        if (store.aktiverUser) {
+          next();
+        } else {
+          next('/');
+        }
+      },
     },
     {
       path: '/checkout',
       name: 'checkout',
       component: CheckoutView,
+      beforeEnter: (to, from, next) => {
+        const store = PiniaStore();
+        if (store.aktiverUser) {
+          next();
+        } else {
+          next('/');
+        }
+      },
     },
     {
       path: '/account',
       name: 'account',
       component: AccountView,
+      beforeEnter: (to, from, next) => {
+        const store = PiniaStore();
+        if (store.aktiverUser) {
+          next();
+        } else {
+          next('/');
+        }
+      },
     },
     {
       path: '/contact',

@@ -54,7 +54,7 @@
         </div>
         <div class="grow"></div>
         <div class="flex items-center">
-          <div v-if="aktiverUser.kn_id == 0" class="flex-shrink-0">
+          <div v-if="store.getAktivenUser == null" class="flex-shrink-0">
             <button
               @click="anmelden"
               type="button"
@@ -73,7 +73,7 @@
                   <span class="sr-only">Open user menu</span>
                   <img
                     class="h-8 w-8 rounded-full"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    src="../assets/icons/placeholderProfil.png"
                     alt=""
                   />
                 </MenuButton>
@@ -92,7 +92,7 @@
                 >
                   <MenuItem v-slot="{ active }">
                     <a
-                      href="#"
+                      @click="router.push('/Account')"
                       :class="[
                         active ? 'bg-gray-100' : '',
                         'block px-4 py-2 text-sm text-gray-700',
@@ -112,7 +112,7 @@
                   </MenuItem>
                   <MenuItem v-slot="{ active }">
                     <a
-                      href="#"
+                      @click="logout"
                       :class="[
                         active ? 'bg-gray-100' : '',
                         'block px-4 py-2 text-sm text-gray-700',
@@ -160,19 +160,21 @@
           <div class="flex-shrink-0">
             <img
               class="h-10 w-10 rounded-full"
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              src="../assets/icons/placeholderProfil.png"
               alt=""
             />
           </div>
           <div class="ml-3">
-            <div class="text-base font-medium text-gray-800">Tom Cook</div>
-            <div class="text-sm font-medium text-gray-500">tom@example.com</div>
+            <div class="text-base font-medium text-gray-800">
+              {{ store.getAktivenUser.vorname }} {{ store.getAktivenUser.nachname }}
+            </div>
+            <div class="text-sm font-medium text-gray-500">{{ store.getAktivenUser.email }}</div>
           </div>
         </div>
         <div class="mt-3 space-y-1">
           <DisclosureButton
             as="a"
-            @click="router.push('/account')"
+            @click="router.push('/Account')"
             class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 sm:px-6"
             >Your Profile</DisclosureButton
           >
@@ -183,6 +185,7 @@
             >Settings</DisclosureButton
           >
           <DisclosureButton
+            @click="logout"
             as="a"
             href="#"
             class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 sm:px-6"
@@ -208,7 +211,6 @@ import {
 import { MenuIcon, XIcon } from '@heroicons/vue/outline';
 
 // Vue Imports
-import { ref, onMounted, watch } from 'vue';
 
 // Router imports
 import { useRouter } from 'vue-router';
@@ -219,19 +221,12 @@ const store = PiniaStore();
 
 const router = useRouter();
 
-let aktiverUser = { kn_id: 0 };
-
-onMounted(() => {
-  aktiverUser.value = store.getAktivenUser;
-  console.log(aktiverUser.value.id);
-});
-
-watch(store.getAktivenUser, (newValue, oldValue) => {
-  console.log(newValue, 'newVal');
-  aktiverUser.value = newValue;
-});
-
 function anmelden() {
   router.push('/loginregister');
+}
+
+function logout() {
+  store.deleteAktivenUser();
+  router.push('/');
 }
 </script>

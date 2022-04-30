@@ -15,3 +15,18 @@ Content-Type: application/json
   "date": "2022-04-30"
 
 }
+#####
+
+
+POST http://localhost:2410/register
+Content-Type: application/json
+
+{
+  "vorname": "Lukas",
+  "nachname": "Semler",
+  "email": "lukas.semler@gmail.com",
+  "strasse_hnr": "Venusweg 11",
+  "stadt": "Wien",
+  "plz": "1140",
+  "password": "LukasPW"
+}
