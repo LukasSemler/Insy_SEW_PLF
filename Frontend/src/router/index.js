@@ -9,6 +9,8 @@ import ShoppingCartView from '../views/ShoppingCartView.vue';
 import CheckoutView from '../views/CheckoutView.vue';
 import AccountView from '../views/AccountView.vue';
 
+import uebersichtSubView from '../views/SubViews/uebersichtSubView.vue';
+
 import { PiniaStore } from '../Store/Store.js';
 
 const router = createRouter({
@@ -62,6 +64,12 @@ const router = createRouter({
     {
       path: '/account',
       name: 'account',
+      children: [
+        { path: '', component: uebersichtSubView },
+        { path: 'account', component: uebersichtSubView },
+        { path: 'password', component: uebersichtSubView },
+        { path: 'history', component: uebersichtSubView },
+      ],
       component: AccountView,
       beforeEnter: (to, from, next) => {
         const store = PiniaStore();
