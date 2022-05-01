@@ -2,7 +2,7 @@ import express from 'express';
 import asyncHandler from 'express-async-handler';
 import { getProducts, getProductBewertung } from '../Controllers/products.js';
 import { sendContact } from '../Controllers/contact.js';
-import { login, register } from '../Controllers/kunde.js';
+import { login, register, changePW } from '../Controllers/kunde.js';
 
 const router = express.Router();
 
@@ -19,4 +19,5 @@ router.post('/contact', asyncHandler(sendContact));
 //Kunden Routen
 router.post('/login', asyncHandler(login));
 router.post('/register', asyncHandler(register));
+router.patch('/changePW/:id', asyncHandler(changePW));
 export default router;

@@ -38,4 +38,36 @@ const registerDB = async ({ vorname, nachname, email, strasse_hnr, stadt, plz, p
   }
 };
 
-export { loginDB, registerDB };
+const changePWDB = async (password, knd_id) => {
+  const client = await pool.connect();
+
+  try {
+    // Transaktion beginnnen
+    client.query('BEGIN');
+
+    //Schauen ob der Kunde vorhanden ist
+    const { rows } = await client.query('SELECT * FROM kunde WHERE knd_id = $1', [knd_id]);
+
+    if (!rows[0]) return null;
+
+    //Passwort changen
+    const result = await client.query(
+      'UPDATE kunde SET password = $1 WHERE knd_id = $2 returning *',
+      [password, knd_id],
+    );
+
+    //transaktion abschließen
+    client.query('COMMIT');
+
+    //User mit neuen PW returnen
+    if (result.rows[0]) return result.rows[0];
+    else return null;
+  } catch (error) {
+    console.log(error.message);
+    client.query('ROLLBACK');
+  } finally {
+    client.release();
+  }
+};
+
+export { loginDB, registerDB, changePWDB };

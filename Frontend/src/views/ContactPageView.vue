@@ -571,7 +571,7 @@ async function submitForm(e) {
       if (res.status == 201) show.value = true;
       else showError.value = true;
 
-      setInterval(() => {
+      setTimeout(() => {
         show.value = false;
         showError.value = false;
       }, 5000);
