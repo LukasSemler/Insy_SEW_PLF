@@ -17,11 +17,12 @@ onMounted(() => {
 <template>
   <CompNavBar></CompNavBar>
   <div>
-    <RouterView v-slot="{ Component }">
+    <!-- <RouterView v-slot="{ Component }">
       <transition name="fade" mode="out-in">
         <component :is="Component"></component>
       </transition>
-    </RouterView>
+    </RouterView> -->
+    <RouterView></RouterView>
   </div>
   <CompFooter></CompFooter>
 </template>

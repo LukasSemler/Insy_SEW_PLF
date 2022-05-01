@@ -14,7 +14,6 @@ import accountSubView from '../views/SubViews/accountSubView.vue';
 import historySubView from '../views/SubViews/historySubView.vue';
 import passwordSubView from '../views/SubViews/passwordSubView.vue';
 
-
 import { PiniaStore } from '../Store/Store.js';
 
 const router = createRouter({

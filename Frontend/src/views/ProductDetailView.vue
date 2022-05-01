@@ -1,4 +1,60 @@
 <template>
+  <!-- Success Ding anzeigen -->
+  <!-- Global notification live region, render this permanently at the end of the document -->
+  <div
+    aria-live="assertive"
+    class="fixed inset-0 flex items-end px-4 py-6 pointer-events-none sm:p-6 sm:items-start z-40"
+  >
+    <div class="w-full flex flex-col items-center space-y-4 sm:items-end">
+      <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
+      <transition
+        enter-active-class="transform ease-out duration-300 transition"
+        enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+        enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+        leave-active-class="transition ease-in duration-100"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div
+          v-if="show"
+          class="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden"
+        >
+          <div class="p-4">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <CheckCircleIcon class="h-6 w-6 text-green-400" aria-hidden="true" />
+              </div>
+              <div class="ml-3 w-0 flex-1 pt-0.5">
+                <p class="text-sm font-medium text-gray-900">Successfully added to basket!</p>
+                <p class="mt-1 text-sm text-gray-500">
+                  You successfully added the product to the shopping cart
+                </p>
+                <button
+                  @click="router.push('/shoppingCart')"
+                  class="mt-4 inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                >
+                  View cart
+                </button>
+              </div>
+              <div class="mt-4 flex"></div>
+              <div class="ml-4 flex-shrink-0 flex">
+                <button
+                  @click="show = false"
+                  class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                >
+                  <span class="sr-only">Close</span>
+                  <XIcon class="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </div>
+  </div>
+
+  <!-- --------------------------------------------------------------------------------------- -->
+
   <div v-if="!productNeu">Nicht geladen</div>
   <div v-else class="bg-gray-50">
     <div
@@ -112,9 +168,12 @@
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 
+import { useRouter } from 'vue-router';
+
 // Tailwind Imports
 import { CheckIcon, StarIcon } from '@heroicons/vue/solid';
-import { ShieldCheckIcon } from '@heroicons/vue/outline';
+import { ShieldCheckIcon, XIcon } from '@heroicons/vue/outline';
+import { CheckCircleIcon } from '@heroicons/vue/outline';
 
 // Component Imports
 import Comp_Bewertungen from '../components/Comp_Bewertungen.vue';
@@ -123,11 +182,14 @@ import Comp_Bewertungen from '../components/Comp_Bewertungen.vue';
 import { PiniaStore } from '../Store/Store.js';
 const store = PiniaStore();
 
+const router = useRouter();
+
 let productNeu = ref(null);
 let bewertungen = ref([]);
 let stats = ref([]);
 let anzahlBewertungen = ref(0);
 let durchschnittBewertung = ref(0);
+let show = ref(false);
 
 onMounted(async () => {
   try {
@@ -167,21 +229,23 @@ function addToCart(product) {
     try {
       //Warenkorb vom LS holen
       let warenkorb = JSON.parse(localStorage.getItem('Warenkorb'));
-
+      console.log(warenkorb);
       //Produkt in den Warenkorb legen
       warenkorb.push(product);
 
       //Neuen Warenkorb im LS speichern
       localStorage.setItem('Warenkorb', JSON.stringify(warenkorb));
+
+      show.value = true;
+
+      setTimeout(() => {
+        show.value = false;
+      }, 3000);
     } catch (error) {
       console.log(error);
 
       //Warenkorb mit Produkt erstellen
-      let warenkorb = [
-        {
-          product,
-        },
-      ];
+      let warenkorb = [product];
 
       //Warenklog im LS speichern
       localStorage.setItem('Warenkorb', JSON.stringify(warenkorb));
