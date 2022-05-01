@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50">
+  <div class="bg-white">
     <div class="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
       <h2 class="sr-only">Checkout</h2>
 
@@ -83,20 +83,6 @@
                 </div>
               </div>
 
-              <div class="sm:col-span-2">
-                <label for="apartment" class="block text-sm font-medium text-gray-700"
-                  >Apartment, suite, etc.</label
-                >
-                <div class="mt-1">
-                  <input
-                    type="text"
-                    name="apartment"
-                    id="apartment"
-                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
-                  />
-                </div>
-              </div>
-
               <div>
                 <label for="city" class="block text-sm font-medium text-gray-700">City</label>
                 <div class="mt-1">
@@ -119,25 +105,10 @@
                     autocomplete="country-name"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   >
-                    <option>United States</option>
-                    <option>Canada</option>
-                    <option>Mexico</option>
+                    <option>Oesterreich</option>
+                    <option>Deutschland</option>
+                    <option>Schweiz</option>
                   </select>
-                </div>
-              </div>
-
-              <div>
-                <label for="region" class="block text-sm font-medium text-gray-700"
-                  >State / Province</label
-                >
-                <div class="mt-1">
-                  <input
-                    type="text"
-                    name="region"
-                    id="region"
-                    autocomplete="address-level1"
-                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
-                  />
                 </div>
               </div>
 
@@ -336,20 +307,17 @@
           <div class="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm">
             <h3 class="sr-only">Items in your cart</h3>
             <ul role="list" class="divide-y divide-gray-200">
-              <li v-for="product in products" :key="product.id" class="flex py-6 px-4 sm:px-6">
+              <li v-for="product in checkout" :key="product.p_id" class="flex py-6 px-4 sm:px-6">
                 <div class="flex-shrink-0">
-                  <img :src="product.imageSrc" :alt="product.imageAlt" class="w-20 rounded-md" />
+                  <img :src="product.link_thumbnail" :alt="product.titel" class="w-20 rounded-md" />
                 </div>
 
                 <div class="ml-6 flex-1 flex flex-col">
                   <div class="flex">
                     <div class="min-w-0 flex-1">
                       <h4 class="text-sm">
-                        <a
-                          :href="product.href"
-                          class="font-medium text-gray-700 hover:text-gray-800"
-                        >
-                          {{ product.title }}
+                        <a class="font-medium text-gray-700 hover:text-gray-800">
+                          {{ product.titel }}
                         </a>
                       </h4>
                     </div>
@@ -358,15 +326,12 @@
                       <button
                         type="button"
                         class="-m-2.5 bg-white p-2.5 flex items-center justify-center text-gray-400 hover:text-gray-500"
-                      >
-                        <span class="sr-only">Remove</span>
-                        <TrashIcon class="h-5 w-5" aria-hidden="true" />
-                      </button>
+                      ></button>
                     </div>
                   </div>
 
                   <div class="flex-1 pt-2 flex items-end justify-between">
-                    <p class="mt-1 text-sm font-medium text-gray-900">{{ product.price }}</p>
+                    <p class="mt-1 text-sm font-medium text-gray-900">{{ product.preis }}€</p>
                   </div>
                 </div>
               </li>
@@ -374,19 +339,15 @@
             <dl class="border-t border-gray-200 py-6 px-4 space-y-6 sm:px-6">
               <div class="flex items-center justify-between">
                 <dt class="text-sm">Subtotal</dt>
-                <dd class="text-sm font-medium text-gray-900">€64.00</dd>
+                <dd class="text-sm font-medium text-gray-900">{{ subtotal }}€</dd>
               </div>
               <div class="flex items-center justify-between">
                 <dt class="text-sm">Shipping</dt>
-                <dd class="text-sm font-medium text-gray-900">€5.00</dd>
-              </div>
-              <div class="flex items-center justify-between">
-                <dt class="text-sm">Taxes</dt>
-                <dd class="text-sm font-medium text-gray-900">€5.52</dd>
+                <dd class="text-sm font-medium text-gray-900">{{ shipping }}€</dd>
               </div>
               <div class="flex items-center justify-between border-t border-gray-200 pt-6">
                 <dt class="text-base font-medium">Total</dt>
-                <dd class="text-base font-medium text-gray-900">€75.52</dd>
+                <dd class="text-base font-medium text-gray-900">{{ total }}€</dd>
               </div>
             </dl>
 
@@ -406,28 +367,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, computed, reactive } from 'vue';
 import {
   RadioGroup,
   RadioGroupDescription,
   RadioGroupLabel,
   RadioGroupOption,
 } from '@headlessui/vue';
-import { CheckCircleIcon, TrashIcon } from '@heroicons/vue/solid';
-
-const products = [
-  {
-    id: 1,
-    title: 'Basic Tee',
-    href: '#',
-    price: '€32.00',
-    color: 'Black',
-    size: 'Large',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/checkout-page-02-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-  },
-  // More products...
-];
+import { CheckCircleIcon } from '@heroicons/vue/solid';
 
 const deliveryMethods = [
   { id: 1, title: 'Standard', turnaround: '4–10 business days', price: '€5.00' },
@@ -441,4 +388,52 @@ const paymentMethods = [
 ];
 
 const selectedDeliveryMethod = ref(deliveryMethods[0]);
+
+let checkout = ref([]);
+let state = reactive({
+  email: '',
+  vorname: '',
+  nachname: '',
+  company: '',
+  address: '',
+  stadt: '',
+  plz: '',
+  phone: '',
+  card_number: '',
+  name_on_card: '',
+  expiration_date: '',
+  cvc: '',
+});
+
+onMounted(() => {
+  try {
+    let warenkorb = JSON.parse(localStorage.getItem('Warenkorb'));
+    console.log(warenkorb);
+    checkout.value = warenkorb;
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
+const subtotal = computed(() => {
+  let subtotal = 0;
+  checkout.value.forEach((product) => {
+    subtotal += parseFloat(product.preis);
+  });
+  return subtotal;
+});
+
+const shipping = computed(() => {
+  let shipping = 0;
+  if (selectedDeliveryMethod.value.id === 1) {
+    shipping = 5;
+  } else if (selectedDeliveryMethod.value.id === 2) {
+    shipping = 16;
+  }
+  return shipping;
+});
+
+const total = computed(() => {
+  return subtotal.value + shipping.value;
+});
 </script>

@@ -43,20 +43,6 @@
                     </div>
                   </div>
                 </div>
-
-                <!-- <p class="mt-4 flex text-sm text-gray-700 space-x-2">
-                  <CheckIcon
-                    v-if="product.inStock"
-                    class="flex-shrink-0 h-5 w-5 text-green-500"
-                    aria-hidden="true"
-                  />
-                  <ClockIcon
-                    v-else
-                    class="flex-shrink-0 h-5 w-5 text-gray-300"
-                    aria-hidden="true"
-                  />
-                  <span>{{ product.inStock ? 'In stock' : `Ships in ${product.leadTime}` }}</span>
-                </p> -->
               </div>
             </li>
           </ul>
@@ -88,7 +74,7 @@
 
           <div class="mt-6">
             <button
-             @click="router.push('/checkout')"
+              @click="router.push('/checkout')"
               class="w-full bg-teal-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-teal-500"
             >
               Checkout
