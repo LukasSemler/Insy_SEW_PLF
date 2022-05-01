@@ -11,6 +11,9 @@ import AccountView from '../views/AccountView.vue';
 
 import uebersichtSubView from '../views/SubViews/uebersichtSubView.vue';
 import accountSubView from '../views/SubViews/accountSubView.vue';
+import historySubView from '../views/SubViews/historySubView.vue';
+import passwordSubView from '../views/SubViews/passwordSubView.vue';
+
 
 import { PiniaStore } from '../Store/Store.js';
 
@@ -68,8 +71,8 @@ const router = createRouter({
       children: [
         { path: '', component: uebersichtSubView },
         { path: 'account', component: accountSubView },
-        { path: 'password', component: uebersichtSubView },
-        { path: 'history', component: uebersichtSubView },
+        { path: 'password', component: passwordSubView },
+        { path: 'history', component: historySubView },
       ],
       component: AccountView,
       beforeEnter: (to, from, next) => {

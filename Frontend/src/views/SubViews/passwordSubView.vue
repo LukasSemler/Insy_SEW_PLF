@@ -36,7 +36,7 @@
           </aside>
 
           <div class="divide-y divide-gray-200 lg:col-span-9">
-            <h1 class="text-center text-3xl bg-lime-500">Uebersicht</h1>
+            <h1 class="text-center text-3xl">Change Password</h1>
           </div>
         </div>
       </div>
@@ -51,9 +51,9 @@ import { CogIcon, KeyIcon, UserCircleIcon, ReplyIcon } from '@heroicons/vue/outl
 const router = useRouter();
 
 const subNavigation = [
-  { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: true, link: '/account' },
+  { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: false, link: '/account' },
   { name: 'Account', href: '#', icon: CogIcon, current: false, link: '/account/account' },
-  { name: 'Password', href: '#', icon: KeyIcon, current: false, link: '/account/password' },
+  { name: 'Password', href: '#', icon: KeyIcon, current: true, link: '/account/password' },
   {
     name: 'Bestell-Historie',
     href: '#',
