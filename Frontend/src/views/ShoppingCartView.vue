@@ -82,13 +82,13 @@
             </div>
             <div class="border-t border-gray-200 pt-4 flex items-center justify-between">
               <dt class="text-base font-medium text-gray-900">Order total</dt>
-              <dd class="text-base font-medium text-gray-900">{{ subTotal + 8 }}€</dd>
+              <dd class="text-base font-medium text-gray-900">{{ subTotal + 5 }}€</dd>
             </div>
           </dl>
 
           <div class="mt-6">
             <button
-              type="submit"
+             @click="router.push('/checkout')"
               class="w-full bg-teal-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-teal-500"
             >
               Checkout
@@ -100,21 +100,6 @@
   </div>
   <div v-else>
     <div class="text-center mt-12">
-      <!-- <svg
-        class="mx-auto h-12 w-12 text-gray-400"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          vector-effect="non-scaling-stroke"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
-        />
-      </svg> -->
       <EmojiSadIcon class="mx-auto h-12 w-12 text-gray-900"></EmojiSadIcon>
       <h3 class="mt-2 text-sm font-medium text-gray-900">No products</h3>
       <p class="mt-1 text-sm text-gray-500">Get started by adding one to your basket</p>
