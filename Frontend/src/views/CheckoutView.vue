@@ -14,12 +14,16 @@
               >
               <div class="mt-1">
                 <input
+                  v-model="state.email"
                   type="email"
                   id="email-address"
                   name="email-address"
                   autocomplete="email"
                   class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                 />
+                <p v-if="v$.email.$invalid" class="mt-2 text-sm text-red-600" id="email-error">
+                  {{ v$.email.$silentErrors[0].$message }}
+                </p>
               </div>
             </div>
           </div>
@@ -34,12 +38,16 @@
                 >
                 <div class="mt-1">
                   <input
+                    v-model="state.vorname"
                     type="text"
                     id="first-name"
                     name="first-name"
                     autocomplete="given-name"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   />
+                  <p v-if="v$.vorname.$invalid" class="mt-2 text-sm text-red-600" id="email-error">
+                    {{ v$.vorname.$silentErrors[0].$message }}
+                  </p>
                 </div>
               </div>
 
@@ -49,12 +57,16 @@
                 >
                 <div class="mt-1">
                   <input
+                    v-model="state.nachname"
                     type="text"
                     id="last-name"
                     name="last-name"
                     autocomplete="family-name"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   />
+                  <p v-if="v$.nachname.$invalid" class="mt-2 text-sm text-red-600" id="email-error">
+                    {{ v$.nachname.$silentErrors[0].$message }}
+                  </p>
                 </div>
               </div>
 
@@ -62,11 +74,15 @@
                 <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
                 <div class="mt-1">
                   <input
+                    v-model="state.company"
                     type="text"
                     name="company"
                     id="company"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   />
+                  <p v-if="v$.company.$invalid" class="mt-2 text-sm text-red-600" id="email-error">
+                    {{ v$.company.$silentErrors[0].$message }}
+                  </p>
                 </div>
               </div>
 
@@ -74,12 +90,16 @@
                 <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
                 <div class="mt-1">
                   <input
+                    v-model="state.address"
                     type="text"
                     name="address"
                     id="address"
                     autocomplete="street-address"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   />
+                  <p v-if="v$.address.$invalid" class="mt-2 text-sm text-red-600" id="email-error">
+                    {{ v$.address.$silentErrors[0].$message }}
+                  </p>
                 </div>
               </div>
 
@@ -87,12 +107,16 @@
                 <label for="city" class="block text-sm font-medium text-gray-700">City</label>
                 <div class="mt-1">
                   <input
+                    v-model="state.stadt"
                     type="text"
                     name="city"
                     id="city"
                     autocomplete="address-level2"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   />
+                  <p v-if="v$.stadt.$invalid" class="mt-2 text-sm text-red-600" id="email-error">
+                    {{ v$.stadt.$silentErrors[0].$message }}
+                  </p>
                 </div>
               </div>
 
@@ -100,6 +124,7 @@
                 <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
                 <div class="mt-1">
                   <select
+                    v-model="state.land"
                     id="country"
                     name="country"
                     autocomplete="country-name"
@@ -109,6 +134,9 @@
                     <option>Deutschland</option>
                     <option>Schweiz</option>
                   </select>
+                  <p v-if="v$.land.$invalid" class="mt-2 text-sm text-red-600" id="email-error">
+                    {{ v$.land.$silentErrors[0].$message }}
+                  </p>
                 </div>
               </div>
 
@@ -118,12 +146,16 @@
                 >
                 <div class="mt-1">
                   <input
+                    v-model="state.plz"
                     type="text"
                     name="postal-code"
                     id="postal-code"
                     autocomplete="postal-code"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   />
+                  <p v-if="v$.plz.$invalid" class="mt-2 text-sm text-red-600" id="email-error">
+                    {{ v$.plz.$silentErrors[0].$message }}
+                  </p>
                 </div>
               </div>
 
@@ -131,12 +163,16 @@
                 <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
                 <div class="mt-1">
                   <input
+                    v-model="state.phone"
                     type="text"
                     name="phone"
                     id="phone"
                     autocomplete="tel"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   />
+                  <p v-if="v$.phone.$invalid" class="mt-2 text-sm text-red-600" id="email-error">
+                    {{ v$.phone.$silentErrors[0].$message }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -207,6 +243,7 @@
 
             <fieldset class="mt-4">
               <legend class="sr-only">Payment type</legend>
+
               <div class="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
                 <div
                   v-for="(paymentMethod, paymentMethodIdx) in paymentMethods"
@@ -353,7 +390,7 @@
 
             <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
               <button
-                type="submit"
+                @click="submitCheckout"
                 class="w-full bg-teal-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-teal-500"
               >
                 Confirm order
@@ -376,6 +413,15 @@ import {
 } from '@headlessui/vue';
 import { CheckCircleIcon } from '@heroicons/vue/solid';
 
+import { PiniaStore } from '../Store/Store.js';
+
+// Vuelidate Imports
+import useValidate from '@vuelidate/core';
+import { required, email } from '@vuelidate/validators';
+import axios from 'axios';
+
+const store = PiniaStore();
+
 const deliveryMethods = [
   { id: 1, title: 'Standard', turnaround: '4–10 business days', price: '€5.00' },
   { id: 2, title: 'Express', turnaround: '2–5 business days', price: '€16.00' },
@@ -390,6 +436,9 @@ const paymentMethods = [
 const selectedDeliveryMethod = ref(deliveryMethods[0]);
 
 let checkout = ref([]);
+
+// Vuelidate --------------------------------------------------------------------------
+
 let state = reactive({
   email: '',
   vorname: '',
@@ -397,6 +446,7 @@ let state = reactive({
   company: '',
   address: '',
   stadt: '',
+  land: 'Deutschland',
   plz: '',
   phone: '',
   card_number: '',
@@ -404,6 +454,60 @@ let state = reactive({
   expiration_date: '',
   cvc: '',
 });
+
+// Rules for vuelidate
+const rules = computed(() => {
+  return {
+    email: { required, email },
+    vorname: { required },
+    nachname: { required },
+    company: '',
+    address: { required },
+    stadt: { required },
+    land: { required },
+    plz: { required },
+    phone: { required },
+    card_number: { required },
+    name_on_card: { required },
+    expiration_date: { required },
+    cvc: { required },
+  };
+});
+
+const v$ = useValidate(rules, state);
+
+// -----------------------------------------------------------------------------------
+
+async function submitCheckout(e) {
+  e.preventDefault();
+  try {
+    v$.value.$validate();
+
+    // Object zum senden bauen
+    let objSenden = {
+      contact_info: state,
+      aktiverUser: store.getAktivenUser,
+      total: total.value,
+      produkte: checkout.value,
+    };
+
+    const res = await axios.post('http://localhost:2410/checkout', objSenden);
+    console.log(res);
+
+    if (!v$.value.$error) {
+      console.log('success');
+    } else {
+      console.log('Fehler');
+    }
+
+    e.preventDefault();
+  } catch (error) {
+    e.preventDefault();
+    console.log(error.message);
+  } finally {
+    e.preventDefault();
+  }
+}
 
 onMounted(() => {
   try {

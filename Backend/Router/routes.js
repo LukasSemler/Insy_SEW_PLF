@@ -3,6 +3,7 @@ import asyncHandler from 'express-async-handler';
 import { getProducts, getProductBewertung } from '../Controllers/products.js';
 import { sendContact } from '../Controllers/contact.js';
 import { login, register, changePW } from '../Controllers/kunde.js';
+import { checkout } from '../Controllers/checkout.js';
 
 const router = express.Router();
 
@@ -20,4 +21,6 @@ router.post('/contact', asyncHandler(sendContact));
 router.post('/login', asyncHandler(login));
 router.post('/register', asyncHandler(register));
 router.patch('/changePW/:id', asyncHandler(changePW));
+
+router.post('/checkout', asyncHandler(checkout));
 export default router;
