@@ -1,4 +1,72 @@
 <template>
+  <TransitionRoot as="template" :show="open">
+    <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="open = false">
+      <div
+        class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+      >
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <DialogOverlay class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+        </TransitionChild>
+
+        <!-- This element is to trick the browser into centering the modal contents. -->
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true"
+          >&#8203;</span
+        >
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          enter-to="opacity-100 translate-y-0 sm:scale-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100 translate-y-0 sm:scale-100"
+          leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        >
+          <div
+            class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6"
+          >
+            <div>
+              <div
+                class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100"
+              >
+                <CheckIcon class="h-6 w-6 text-green-600" aria-hidden="true" />
+              </div>
+              <div class="mt-3 text-center sm:mt-5">
+                <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900">
+                  Payment successful
+                </DialogTitle>
+                <div class="mt-2">
+                  <p class="text-sm text-gray-500">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur amet
+                    labore.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-5 sm:mt-6">
+              <button
+                type="button"
+                class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-teal-600 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:text-sm"
+                @click="$router.push('/account')"
+              >
+                Go back to dashboard
+              </button>
+            </div>
+          </div>
+        </TransitionChild>
+      </div>
+    </Dialog>
+  </TransitionRoot>
+
+  <!-- ------------------------------------------------------------------------------ -->
+
   <div class="bg-white">
     <div class="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
       <h2 class="sr-only">Checkout</h2>
@@ -282,12 +350,20 @@
                 >
                 <div class="mt-1">
                   <input
+                    v-model="state.card_number"
                     type="text"
                     id="card-number"
                     name="card-number"
                     autocomplete="cc-number"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   />
+                  <p
+                    v-if="v$.card_number.$invalid"
+                    class="mt-2 text-sm text-red-600"
+                    id="email-error"
+                  >
+                    {{ v$.card_number.$silentErrors[0].$message }}
+                  </p>
                 </div>
               </div>
 
@@ -297,12 +373,20 @@
                 >
                 <div class="mt-1">
                   <input
+                    v-model="state.name_on_card"
                     type="text"
                     id="name-on-card"
                     name="name-on-card"
                     autocomplete="cc-name"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   />
+                  <p
+                    v-if="v$.name_on_card.$invalid"
+                    class="mt-2 text-sm text-red-600"
+                    id="email-error"
+                  >
+                    {{ v$.name_on_card.$silentErrors[0].$message }}
+                  </p>
                 </div>
               </div>
 
@@ -312,12 +396,20 @@
                 >
                 <div class="mt-1">
                   <input
+                    v-model="state.expiration_date"
                     type="text"
                     name="expiration-date"
                     id="expiration-date"
                     autocomplete="cc-exp"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   />
+                  <p
+                    v-if="v$.expiration_date.$invalid"
+                    class="mt-2 text-sm text-red-600"
+                    id="email-error"
+                  >
+                    {{ v$.expiration_date.$silentErrors[0].$message }}
+                  </p>
                 </div>
               </div>
 
@@ -325,12 +417,16 @@
                 <label for="cvc" class="block text-sm font-medium text-gray-700">CVC</label>
                 <div class="mt-1">
                   <input
+                    v-model="state.cvc"
                     type="text"
                     name="cvc"
                     id="cvc"
                     autocomplete="csc"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   />
+                  <p v-if="v$.cvc.$invalid" class="mt-2 text-sm text-red-600" id="email-error">
+                    {{ v$.cvc.$silentErrors[0].$message }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -412,6 +508,14 @@ import {
   RadioGroupOption,
 } from '@headlessui/vue';
 import { CheckCircleIcon } from '@heroicons/vue/solid';
+import {
+  Dialog,
+  DialogOverlay,
+  DialogTitle,
+  TransitionChild,
+  TransitionRoot,
+} from '@headlessui/vue';
+import { CheckIcon } from '@heroicons/vue/outline';
 
 import { PiniaStore } from '../Store/Store.js';
 
@@ -436,7 +540,7 @@ const paymentMethods = [
 const selectedDeliveryMethod = ref(deliveryMethods[0]);
 
 let checkout = ref([]);
-
+let open = ref(false);
 // Vuelidate --------------------------------------------------------------------------
 
 let state = reactive({
@@ -461,7 +565,7 @@ const rules = computed(() => {
     email: { required, email },
     vorname: { required },
     nachname: { required },
-    company: '',
+    company: {},
     address: { required },
     stadt: { required },
     land: { required },
@@ -483,20 +587,31 @@ async function submitCheckout(e) {
   try {
     v$.value.$validate();
 
-    // Object zum senden bauen
-    let objSenden = {
-      contact_info: state,
-      aktiverUser: store.getAktivenUser,
-      total: total.value,
-      produkte: checkout.value,
-    };
-
-    const res = await axios.post('http://localhost:2410/checkout', objSenden);
-    console.log(res);
-
     if (!v$.value.$error) {
-      console.log('success');
+      e.preventDefault();
+
+      console.log('success'); // Object zum senden bauen
+      let objSenden = {
+        contact_info: state,
+        aktiverUser: store.getAktivenUser,
+        total: total.value,
+        produkte: checkout.value,
+      };
+
+      const res = await axios.post('http://localhost:2410/checkout', objSenden);
+
+      if (res.status == 201) {
+        //Warenkorb leeren
+        checkout.value = [];
+        localStorage.removeItem('Warenkorb');
+        localStorage.setItem('Warenkorb', JSON.stringify([]));
+
+        //Dialog öffnen
+        open.value = true;
+      }
     } else {
+      e.preventDefault();
+      console.log(v$.value.$error);
       console.log('Fehler');
     }
 
