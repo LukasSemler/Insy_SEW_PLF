@@ -4,6 +4,7 @@ import { getProducts, getProductBewertung } from '../Controllers/products.js';
 import { sendContact } from '../Controllers/contact.js';
 import { login, register, changePW } from '../Controllers/kunde.js';
 import { checkout } from '../Controllers/checkout.js';
+import { getOrders } from '../Controllers/orders.js';
 
 const router = express.Router();
 
@@ -23,4 +24,6 @@ router.post('/register', asyncHandler(register));
 router.patch('/changePW/:id', asyncHandler(changePW));
 
 router.post('/checkout', asyncHandler(checkout));
+
+router.get('/orders/:knd_id', asyncHandler(getOrders));
 export default router;
