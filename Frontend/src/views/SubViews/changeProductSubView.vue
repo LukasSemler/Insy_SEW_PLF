@@ -36,7 +36,7 @@
           </aside>
 
           <div class="divide-y divide-gray-200 lg:col-span-9">
-            <h1 class="text-center text-3xl mt-3">Uebersicht</h1>
+           
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@ const router = useRouter();
 
 const subNavFilter = computed(() => {
   let admin = [
-    { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: true, link: '/account' },
+    { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: false, link: '/account' },
     {
       name: 'Add Product',
       href: '#',
@@ -75,7 +75,7 @@ const subNavFilter = computed(() => {
       name: 'Change Product',
       href: '#',
       icon: CogIcon,
-      current: false,
+      current: true,
       link: '/account/changeProduct',
     },
     {

@@ -5,6 +5,7 @@ import { sendContact } from '../Controllers/contact.js';
 import { login, register, changePW } from '../Controllers/kunde.js';
 import { checkout } from '../Controllers/checkout.js';
 import { getOrders } from '../Controllers/orders.js';
+import { getCategories } from '../Controllers/categories.js';
 
 const router = express.Router();
 
@@ -26,4 +27,6 @@ router.patch('/changePW/:id', asyncHandler(changePW));
 router.post('/checkout', asyncHandler(checkout));
 
 router.get('/orders/:knd_id', asyncHandler(getOrders));
+
+router.get('/categories', asyncHandler(getCategories));
 export default router;

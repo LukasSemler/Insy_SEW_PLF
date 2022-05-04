@@ -7,7 +7,7 @@
             <nav class="space-y-1">
               <a
                 @click="router.push(item.link)"
-                v-for="item in subNavigation"
+                v-for="item in subNavFilter"
                 :key="item.name"
                 :href="item.href"
                 :class="[
@@ -62,7 +62,6 @@
                         id="username"
                         autocomplete="username"
                         class="focus:ring-sky-500 focus:border-sky-500 flex-grow block w-full min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
-                        :value="user.handle"
                       />
                     </div>
                   </div>
@@ -145,29 +144,61 @@
 </template>
 
 <script setup>
-import { CogIcon, KeyIcon, UserCircleIcon, ReplyIcon } from '@heroicons/vue/outline';
+import {
+  CogIcon,
+  KeyIcon,
+  UserCircleIcon,
+  ReplyIcon,
+  PlusCircleIcon,
+  MinusCircleIcon,
+} from '@heroicons/vue/outline';
 import { useRouter } from 'vue-router';
+import { computed } from 'vue';
+import { PiniaStore } from '../../Store/Store.js';
+const store = PiniaStore();
 
 const router = useRouter();
 
-const user = {
-  name: 'Debbie Lewis',
-  handle: 'deblewis',
-  email: 'debbielewis@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=320&h=320&q=80',
-};
+const subNavFilter = computed(() => {
+  let admin = [
+    { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: false, link: '/account' },
+    {
+      name: 'Add Product',
+      href: '#',
+      icon: PlusCircleIcon,
+      current: false,
+      link: '/account/addProduct',
+    },
+    {
+      name: 'Change Product',
+      href: '#',
+      icon: CogIcon,
+      current: false,
+      link: '/account/changeProduct',
+    },
+    {
+      name: 'Delete Product',
+      href: '#',
+      icon: MinusCircleIcon,
+      current: false,
+      link: '/account/delProduct',
+    },
+  ];
+  let user = [
+    { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: false, link: '/account' },
+    { name: 'Account', href: '#', icon: CogIcon, current: true, link: '/account/account' },
+    { name: 'Password', href: '#', icon: KeyIcon, current: false, link: '/account/password' },
+    {
+      name: 'Bestell-Historie',
+      href: '#',
+      icon: ReplyIcon,
+      current: false,
+      link: '/account/history',
+    },
+  ];
 
-const subNavigation = [
-  { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: false, link: '/account' },
-  { name: 'Account', href: '#', icon: CogIcon, current: true, link: '/account/account' },
-  { name: 'Password', href: '#', icon: KeyIcon, current: false, link: '/account/password' },
-  {
-    name: 'Bestell-Historie',
-    href: '#',
-    icon: ReplyIcon,
-    current: false,
-    link: '/account/history',
-  },
-];
+  if (store.getAktivenUser.isAdmin == true) {
+    return admin;
+  } else return user;
+});
 </script>

@@ -7,7 +7,7 @@
             <nav class="space-y-1">
               <a
                 @click="router.push(item.link)"
-                v-for="item in subNavigation"
+                v-for="item in subNavFilter"
                 :key="item.name"
                 :href="item.href"
                 :class="[
@@ -145,7 +145,14 @@
 <script setup>
 import { CheckCircleIcon } from '@heroicons/vue/solid';
 import { useRouter } from 'vue-router';
-import { CogIcon, KeyIcon, UserCircleIcon, ReplyIcon } from '@heroicons/vue/outline';
+import {
+  CogIcon,
+  KeyIcon,
+  UserCircleIcon,
+  ReplyIcon,
+  PlusCircleIcon,
+  MinusCircleIcon,
+} from '@heroicons/vue/outline';
 
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
@@ -155,18 +162,48 @@ const store = PiniaStore();
 
 const router = useRouter();
 
-const subNavigation = [
-  { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: false, link: '/account' },
-  { name: 'Account', href: '#', icon: CogIcon, current: false, link: '/account/account' },
-  { name: 'Password', href: '#', icon: KeyIcon, current: false, link: '/account/password' },
-  {
-    name: 'Bestell-Historie',
-    href: '#',
-    icon: ReplyIcon,
-    current: true,
-    link: '/account/history',
-  },
-];
+const subNavFilter = computed(() => {
+  let admin = [
+    { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: true, link: '/account' },
+    {
+      name: 'Add Product',
+      href: '#',
+      icon: PlusCircleIcon,
+      current: false,
+      link: '/account/addProduct',
+    },
+    {
+      name: 'Change Product',
+      href: '#',
+      icon: CogIcon,
+      current: false,
+      link: '/account/changeProduct',
+    },
+    {
+      name: 'Delete Product',
+      href: '#',
+      icon: MinusCircleIcon,
+      current: false,
+      link: '/account/delProduct',
+    },
+  ];
+  let user = [
+    { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: false, link: '/account' },
+    { name: 'Account', href: '#', icon: CogIcon, current: false, link: '/account/account' },
+    { name: 'Password', href: '#', icon: KeyIcon, current: false, link: '/account/password' },
+    {
+      name: 'Bestell-Historie',
+      href: '#',
+      icon: ReplyIcon,
+      current: true,
+      link: '/account/history',
+    },
+  ];
+
+  if (store.getAktivenUser.isAdmin == true) {
+    return admin;
+  } else return user;
+});
 
 let alleBestellungen = ref([]);
 
