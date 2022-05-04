@@ -36,7 +36,23 @@
           </aside>
 
           <div class="divide-y divide-gray-200 lg:col-span-9">
-            <h1 class="text-center text-3xl mt-3">Uebersicht</h1>
+            <div v-if="store.getAktivenUser.isAdmin" class="mx-3 mt-3">
+              <h3 class="text-lg leading-6 font-medium text-gray-900">Last 30 days</h3>
+              <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+                <div
+                  v-for="item in stats"
+                  :key="item.name"
+                  class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6"
+                >
+                  <dt class="text-sm font-medium text-gray-500 truncate">
+                    {{ item.name }}
+                  </dt>
+                  <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                    {{ item.stat }}
+                  </dd>
+                </div>
+              </dl>
+            </div>
           </div>
         </div>
       </div>
@@ -60,6 +76,12 @@ import { PiniaStore } from '../../Store/store.js';
 const store = PiniaStore();
 
 const router = useRouter();
+
+const stats = [
+  { name: 'Total Subscribers', stat: '71,897' },
+  { name: 'Avg. Open Rate', stat: '58.16%' },
+  { name: 'Avg. Click Rate', stat: '24.57%' },
+];
 
 const subNavFilter = computed(() => {
   let admin = [

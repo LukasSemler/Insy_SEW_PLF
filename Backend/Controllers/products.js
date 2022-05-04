@@ -2,7 +2,12 @@ import validator from 'is-my-json-valid';
 import fs from 'fs';
 import path from 'path';
 
-import { getProductsDB, getProductBewertungDb, addProductDB } from '../Models/productsDB.js';
+import {
+  getProductsDB,
+  getProductBewertungDb,
+  addProductDB,
+  deleteProductDB,
+} from '../Models/productsDB.js';
 
 const dirname = path.resolve();
 const validateAddProduct = validator({
@@ -74,4 +79,36 @@ const thumbnail = async (req, res) => {
   }
 };
 
-export { getProducts, getProductBewertung, thumbnail, addProduct };
+const deleteProduct = async (req, res) => {
+  const { p_id } = req.params;
+
+  const resultDB = await deleteProductDB(p_id);
+
+  if (resultDB) {
+    try {
+      let thumbnailLink = resultDB.link_thumbnail;
+      //change image path to /public/images/
+      thumbnailLink = thumbnailLink.replace('/images/', '/public/images/');
+      //remove everything before the /public
+      thumbnailLink = thumbnailLink.replace(/^.*\/public\//, '/public/');
+      thumbnailLink = path.join(dirname, thumbnailLink);
+      //Bild löschen
+      fs.unlink(thumbnailLink, (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('File deleted!');
+        }
+      });
+      return res.status(200).send('Fach wurde erfolgreich gelöscht');
+    } catch (error) {
+      //Fehler ausgeben
+      console.log(error.message);
+      //Fehler zurückschicken
+      return res.status(500).send('Fehler beim Thumbnail löschen');
+    }
+  }
+  return res.status(400).send('Fehler beim Löschen');
+};
+
+export { getProducts, getProductBewertung, thumbnail, addProduct, deleteProduct };

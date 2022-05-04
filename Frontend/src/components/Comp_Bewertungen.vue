@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50">
+  <div class="bg-white">
     <div
       class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:py-32 lg:px-8 lg:grid lg:grid-cols-12 lg:gap-x-8"
     >
@@ -87,7 +87,9 @@
                   class="h-12 w-12 rounded-full"
                 />
                 <div class="ml-4">
-                  <h4 class="text-sm font-bold text-gray-900">{{ review.vorname }}</h4>
+                  <h4 class="text-sm font-bold text-gray-900">
+                    {{ review.vorname }} {{ review.nachname }}
+                  </h4>
                   <div class="mt-1 flex items-center">
                     <StarIcon
                       v-for="rating in [0, 1, 2, 3, 4]"
@@ -126,7 +128,7 @@
 import { StarIcon } from '@heroicons/vue/solid';
 import axios from 'axios';
 
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 let bewertungen = ref([]);
 let stats = ref([]);
@@ -136,6 +138,10 @@ let durchschnittBewertung = ref(0);
 // Props definieren
 const props = defineProps({
   id: Number,
+});
+
+onMounted(() => {
+  window.scrollTo(0, 0);
 });
 
 // Bewertungen vom Server holen

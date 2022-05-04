@@ -5,6 +5,7 @@ import {
   getProductBewertung,
   thumbnail,
   addProduct,
+  deleteProduct,
 } from '../Controllers/products.js';
 import { sendContact } from '../Controllers/contact.js';
 import { login, register, changePW } from '../Controllers/kunde.js';
@@ -37,4 +38,6 @@ router.get('/categories', asyncHandler(getCategories));
 
 router.post('/thumbnail', asyncHandler(thumbnail));
 router.post('/product', asyncHandler(addProduct));
+router.delete('/product/:p_id', asyncHandler(deleteProduct));
+
 export default router;

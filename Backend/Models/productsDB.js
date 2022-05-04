@@ -86,4 +86,14 @@ const addProductDB = async ({ titel, beschreibung, preis, link_thumbnail, katego
   }
 };
 
-export { getProductsDB, getProductBewertungDb, addProductDB };
+const deleteProductDB = async (p_id) => {
+  try {
+    const { rows } = await query('DELETE FROM produkt WHERE p_id = $1 returning *;', [p_id]);
+    return rows[0];
+  } catch (error) {
+    console.log(error.message);
+    return null;
+  }
+};
+
+export { getProductsDB, getProductBewertungDb, addProductDB, deleteProductDB };
