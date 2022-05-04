@@ -1,5 +1,5 @@
 <template>
-  <Disclosure as="nav" class="bg-gray-50 shadow" v-slot="{ open }">
+  <Disclosure as="nav" class="bg-white shadow" v-slot="{ open }">
     <div class="mx-auto px-3">
       <div class="flex justify-between h-16">
         <div class="flex">
@@ -33,13 +33,13 @@
               Shop
             </a>
             <a
-              href="#"
+              @click="router.push('/aboutus')"
               class="border-transparent text-gray-500 hover:border-teal-400 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
             >
               About Us
             </a>
             <a
-              href="#"
+              @click="router.push('/faq')"
               class="border-transparent text-gray-500 hover:border-teal-400 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
             >
               FAQ
@@ -137,13 +137,13 @@
         >
         <DisclosureButton
           as="a"
-          href="#"
+          @click="router.push('/aboutus')"
           class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6"
           >About Us</DisclosureButton
         >
         <DisclosureButton
           as="a"
-          href="#"
+          @click="router.push('/faq')"
           class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6"
           >FAQ</DisclosureButton
         >

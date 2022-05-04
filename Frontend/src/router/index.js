@@ -8,6 +8,8 @@ import NotFoundView from '../views/NotFoundView.vue';
 import ShoppingCartView from '../views/ShoppingCartView.vue';
 import CheckoutView from '../views/CheckoutView.vue';
 import AccountView from '../views/AccountView.vue';
+import FAQ from '../views/FAQ.vue';
+import AboutUsView from '../views/AboutUsView.vue';
 
 import uebersichtSubView from '../views/SubViews/uebersichtSubView.vue';
 import accountSubView from '../views/SubViews/accountSubView.vue';
@@ -82,6 +84,16 @@ const router = createRouter({
           next('/');
         }
       },
+    },
+    {
+      path: '/faq',
+      name: 'FAQ',
+      component: FAQ,
+    },
+    {
+      path: '/aboutus',
+      name: 'AboutUs',
+      component: AboutUsView,
     },
     {
       path: '/contact',

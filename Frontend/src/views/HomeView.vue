@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50">
+  <div class="bg-white">
     <Comp_HomeHeader></Comp_HomeHeader>
     <Suspense>
       <template #default>
