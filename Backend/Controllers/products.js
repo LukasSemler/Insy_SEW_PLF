@@ -1,5 +1,36 @@
 import validator from 'is-my-json-valid';
-import { getProductsDB, getProductBewertungDb } from '../Models/productsDB.js';
+import fs from 'fs';
+import path from 'path';
+
+import { getProductsDB, getProductBewertungDb, addProductDB } from '../Models/productsDB.js';
+
+const dirname = path.resolve();
+const validateAddProduct = validator({
+  required: true,
+  type: 'object',
+  properties: {
+    titel: {
+      required: true,
+      type: 'string',
+    },
+    beschreibung: {
+      required: true,
+      type: 'string',
+    },
+    preis: {
+      required: true,
+      type: 'number',
+    },
+    link_thumbnail: {
+      required: true,
+      type: 'string',
+    },
+    kategorie: {
+      required: true,
+      type: 'object',
+    },
+  },
+});
 
 const getProducts = async (req, res) => {
   res.status(200).json(await getProductsDB());
@@ -15,4 +46,32 @@ const getProductBewertung = async (req, res) => {
   res.status(200).json(result);
 };
 
-export { getProducts, getProductBewertung };
+const addProduct = async (req, res) => {
+  if (!validateAddProduct(req.body)) return res.status(400).send(validateLogin.errors);
+
+  const result = await addProductDB(req.body);
+
+  if (result) return res.status(200).json(result);
+  else return res.status(400).send('Something went wrong while adding the product');
+};
+
+const thumbnail = async (req, res) => {
+  try {
+    const { titel, datentyp } = req.body;
+    console.log(titel, datentyp);
+    const uniqueImageName = path.join(dirname, `public/images/${titel}.${datentyp}`);
+    //schauen ob das Bild schon existiert, wenn ja löschen und neu erstellen
+    if (fs.existsSync(`${dirname}/public/images/${titel}.${datentyp}`)) {
+      fs.unlinkSync(`${dirname}/public/images/${titel}.${datentyp}`);
+    }
+
+    fs.writeFileSync(`${uniqueImageName}`, req.files.image.data);
+
+    res.status(200).send('Success');
+  } catch (error) {
+    console.log(error);
+    res.status(400).send('Something went wrong');
+  }
+};
+
+export { getProducts, getProductBewertung, thumbnail, addProduct };

@@ -81,6 +81,7 @@
             <div v-for="review in bewertungen" :key="review.id" class="py-12">
               <div class="flex items-center">
                 <img
+                  crossorigin="anonymous"
                   src="../assets/icons/placeholderProfil.png"
                   :alt="`${review.vorname}.`"
                   class="h-12 w-12 rounded-full"

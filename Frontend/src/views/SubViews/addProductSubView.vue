@@ -1,4 +1,96 @@
 <template>
+  <!-- Success Ding anzeigen -->
+  <!-- Global notification live region, render this permanently at the end of the document -->
+  <div
+    aria-live="assertive"
+    class="fixed inset-0 flex items-end px-4 py-6 pointer-events-none sm:p-6 sm:items-start z-40"
+  >
+    <div class="w-full flex flex-col items-center space-y-4 sm:items-end">
+      <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
+      <transition
+        enter-active-class="transform ease-out duration-300 transition"
+        enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+        enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+        leave-active-class="transition ease-in duration-100"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div
+          v-if="show"
+          class="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden"
+        >
+          <div class="p-4">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <CheckCircleIcon class="h-6 w-6 text-green-400" aria-hidden="true" />
+              </div>
+              <div class="ml-3 w-0 flex-1 pt-0.5">
+                <p class="text-sm font-medium text-gray-900">Successfully Sent!</p>
+                <p class="mt-1 text-sm text-gray-500">You sent successfully the message</p>
+              </div>
+              <div class="ml-4 flex-shrink-0 flex">
+                <button
+                  @click="show = false"
+                  class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                >
+                  <span class="sr-only">Close</span>
+                  <XIcon class="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </div>
+  </div>
+
+  <!-- Error dings anzeigen -->
+  <!-- Global notification live region, render this permanently at the end of the document -->
+  <div
+    aria-live="assertive"
+    class="fixed inset-0 flex items-end px-4 py-6 pointer-events-none sm:p-6 sm:items-start z-40"
+  >
+    <div class="w-full flex flex-col items-center space-y-4 sm:items-end">
+      <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
+      <transition
+        enter-active-class="transform ease-out duration-300 transition"
+        enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+        enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+        leave-active-class="transition ease-in duration-100"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div
+          v-if="showError"
+          class="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden"
+        >
+          <div class="p-4">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <XCircleIcon class="h-6 w-6 text-red-500" aria-hidden="true" />
+              </div>
+              <div class="ml-3 w-0 flex-1 pt-0.5">
+                <p class="text-sm font-medium text-gray-900">Error</p>
+                <p class="mt-1 text-sm text-gray-500">
+                  There was an error when sending your message
+                </p>
+              </div>
+              <div class="ml-4 flex-shrink-0 flex">
+                <button
+                  @click="showError = false"
+                  class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                >
+                  <span class="sr-only">Close</span>
+                  <XIcon class="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </div>
+  </div>
+
   <main class="relative -mt-32">
     <div class="max-w-screen-xl mx-auto pb-6 px-4 sm:px-6 lg:pb-16 lg:px-8">
       <div class="bg-white rounded-lg shadow overflow-hidden">
@@ -55,6 +147,13 @@
                           class="shadow-sm focus:ring-teal-500 focus:border-teal-500 block w-full sm:text-sm border-gray-300 rounded-md"
                         />
                       </div>
+                      <p
+                        v-if="v$.titel.$invalid"
+                        class="mt-2 text-sm text-red-600"
+                        id="email-error"
+                      >
+                        {{ v$.titel.$silentErrors[0].$message }}
+                      </p>
                     </div>
 
                     <div class="sm:col-span-6">
@@ -69,8 +168,15 @@
                           rows="3"
                           class="shadow-sm focus:ring-teal-500 focus:border-teal-500 block w-full sm:text-sm border border-gray-300 rounded-md"
                         />
+                        <p class="mt-2 text-sm text-gray-500">Describe the new product</p>
+                        <p
+                          v-if="v$.beschreibung.$invalid"
+                          class="mt-2 text-sm text-red-600"
+                          id="email-error"
+                        >
+                          {{ v$.beschreibung.$silentErrors[0].$message }}
+                        </p>
                       </div>
-                      <p class="mt-2 text-sm text-gray-500">Describe the new product</p>
                     </div>
 
                     <div class="sm:col-span-6">
@@ -113,6 +219,7 @@
                           </div>
                           <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
                         </div>
+
                         <div v-else>
                           <div class="flex justify-center">
                             <img
@@ -134,6 +241,9 @@
                           Bild entfernen
                         </button>
                       </div>
+                      <p v-if="!image" class="mt-2 text-sm text-red-600" id="email-error">
+                        Value is required
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -152,6 +262,13 @@
                           id="preis"
                           class="shadow-sm focus:ring-teal-500 focus:border-teal-500 block w-full sm:text-sm border-gray-300 rounded-md"
                         />
+                        <p
+                          v-if="v$.preis.$invalid"
+                          class="mt-2 text-sm text-red-600"
+                          id="email-error"
+                        >
+                          {{ v$.preis.$silentErrors[0].$message }}
+                        </p>
                       </div>
                     </div>
 
@@ -166,9 +283,18 @@
                           name="kategorie"
                           class="shadow-sm focus:ring-teal-500 focus:border-teal-500 block w-full sm:text-sm border-gray-300 rounded-md"
                         >
-                          <option v-for="cat of kategorien" :key="cat.k_id">{{ cat.titel }}</option>
+                          <option v-for="cat of kategorien" :key="cat.k_id">
+                            {{ cat.titel }}
+                          </option>
                         </select>
                       </div>
+                      <p
+                        v-if="v$.kategorie.$invalid"
+                        class="mt-2 text-sm text-red-600"
+                        id="email-error"
+                      >
+                        {{ v$.kategorie.$silentErrors[0].$message }}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -177,8 +303,16 @@
               <div class="pt-5">
                 <div class="flex justify-center mb-4">
                   <button
+                    v-if="!checkError"
                     @click="submit"
                     class="w-20 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                  >
+                    Save
+                  </button>
+                  <button
+                    v-else
+                    :disabled="checkError"
+                    class="w-20 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
                   >
                     Save
                   </button>
@@ -189,6 +323,9 @@
         </div>
       </div>
     </div>
+
+    {{ state.kategorie }}
+    {{ getFullKategorie[0] }}
   </main>
 </template>
 
@@ -201,22 +338,42 @@ import {
   ReplyIcon,
   PlusCircleIcon,
   MinusCircleIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  XIcon,
 } from '@heroicons/vue/outline';
 import { computed, ref, onMounted, reactive } from 'vue';
 import { PiniaStore } from '../../Store/store.js';
 import axios from 'axios';
+// Vuelidate Imports
+import useValidate from '@vuelidate/core';
+import { required, numeric } from '@vuelidate/validators';
 
 const store = PiniaStore();
 
 const router = useRouter();
 const kategorien = ref([]);
+const show = ref(false);
+const showError = ref(false);
 
 const state = reactive({
   titel: '',
   beschreibung: '',
-  preis: '',
+  preis: null,
   kategorie: null,
 });
+
+// Rules for vuelidate
+const rules = computed(() => {
+  return {
+    titel: { required },
+    beschreibung: { required },
+    preis: { required, numeric },
+    kategorie: { required },
+  };
+});
+
+const v$ = useValidate(rules, state);
 
 let image = ref(null);
 let imageSchicken = ref(null);
@@ -228,11 +385,52 @@ onMounted(async () => {
   console.log(data);
 });
 
-async function submit(){
-  
+async function submit(e) {
+  e.preventDefault();
+  try {
+    v$.value.$validate();
+
+    if (!v$.value.$error) {
+      // Schauen ob ein Image vorhanden ist
+      if (image.value) {
+        // Bild senden
+        await sendImage();
+        await sendData();
+      }
+    } else {
+      console.log('Fehler');
+    }
+
+    e.preventDefault();
+  } catch (error) {
+    e.preventDefault();
+    console.log(error.message);
+  } finally {
+    e.preventDefault();
+  }
 }
 
 //#region Bild
+
+async function sendData() {
+  const res = await axios.post('http://localhost:2410/product', {
+    titel: state.titel,
+    beschreibung: state.beschreibung,
+    preis: state.preis,
+    kategorie: getFullKategorie.value[0],
+    link_thumbnail: `http://localhost:2410/images/${state.titel}.${datentyp.value}`,
+  });
+
+  if (res.status == 200) {
+    felderClearen();
+    show.value = true;
+  } else show.value = false;
+
+  setTimeout(() => {
+    show.value = false;
+    showError.value = false;
+  }, 5000);
+}
 
 //Bild hochladen
 function onFileChanged(event) {
@@ -242,7 +440,6 @@ function onFileChanged(event) {
     imageSchicken.value = event.target.files[0];
 
     const name = imageSchicken.value.name;
-    console.log('name', name);
 
     if (name.includes('.jpg')) {
       datentyp.value = 'jpg';
@@ -274,18 +471,29 @@ async function sendImage() {
   formData.append('image', imageSchicken.value);
   formData.append('titel', state.titel);
   formData.append('datentyp', datentyp.value);
-  console.log(imageSchicken.value);
-  axios.post(`http://localhost:2410/fachThumbnail`, formData, {
+  const res = await axios.post(`http://localhost:2410/thumbnail`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
+
+  if (res.status != 200) showError.value = true;
+
+  setTimeout(() => {
+    showError.value = false;
+  }, 5000);
 }
 //#endregion
 
 const subNavFilter = computed(() => {
   let admin = [
-    { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: false, link: '/account' },
+    {
+      name: 'Übersicht',
+      href: '#',
+      icon: UserCircleIcon,
+      current: false,
+      link: '/account',
+    },
     {
       name: 'Add Product',
       href: '#',
@@ -309,9 +517,27 @@ const subNavFilter = computed(() => {
     },
   ];
   let user = [
-    { name: 'Übersicht', href: '#', icon: UserCircleIcon, current: true, link: '/account' },
-    { name: 'Account', href: '#', icon: CogIcon, current: false, link: '/account/account' },
-    { name: 'Password', href: '#', icon: KeyIcon, current: false, link: '/account/password' },
+    {
+      name: 'Übersicht',
+      href: '#',
+      icon: UserCircleIcon,
+      current: true,
+      link: '/account',
+    },
+    {
+      name: 'Account',
+      href: '#',
+      icon: CogIcon,
+      current: false,
+      link: '/account/account',
+    },
+    {
+      name: 'Password',
+      href: '#',
+      icon: KeyIcon,
+      current: false,
+      link: '/account/password',
+    },
     {
       name: 'Bestell-Historie',
       href: '#',
@@ -325,4 +551,27 @@ const subNavFilter = computed(() => {
     return admin;
   } else return user;
 });
+
+const checkError = computed(() => {
+  if (v$.value.$invalid == true) {
+    return true;
+  } else {
+    if (image.value) return false;
+    return true;
+  }
+});
+
+const getFullKategorie = computed(() => {
+  return kategorien.value.filter((kategorie) => kategorie.titel == state.kategorie);
+});
+
+function felderClearen() {
+  state.titel = '';
+  state.beschreibung = '';
+  state.preis = null;
+  state.kategorie = null;
+  image.value = null;
+  imageSchicken.value = null;
+  datentyp.value = null;
+}
 </script>

@@ -1,6 +1,11 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
-import { getProducts, getProductBewertung } from '../Controllers/products.js';
+import {
+  getProducts,
+  getProductBewertung,
+  thumbnail,
+  addProduct,
+} from '../Controllers/products.js';
 import { sendContact } from '../Controllers/contact.js';
 import { login, register, changePW } from '../Controllers/kunde.js';
 import { checkout } from '../Controllers/checkout.js';
@@ -29,4 +34,7 @@ router.post('/checkout', asyncHandler(checkout));
 router.get('/orders/:knd_id', asyncHandler(getOrders));
 
 router.get('/categories', asyncHandler(getCategories));
+
+router.post('/thumbnail', asyncHandler(thumbnail));
+router.post('/product', asyncHandler(addProduct));
 export default router;

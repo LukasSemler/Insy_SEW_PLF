@@ -1,4 +1,4 @@
-import { query } from '../DB/index.js';
+import { query, pool } from '../DB/index.js';
 
 const getProductsDB = async () => {
   const { rows } = await query('SELECT * FROM produkt;');
@@ -53,4 +53,37 @@ const getAnzahlBewertungen = async (p_id) => {
   return erg;
 };
 
-export { getProductsDB, getProductBewertungDb };
+const addProductDB = async ({ titel, beschreibung, preis, link_thumbnail, kategorie }) => {
+  const client = await pool.connect();
+
+  try {
+    //begin transaction
+    await client.query('BEGIN');
+
+    const { rows } = await client.query(
+      'INSERT INTO produkt ( titel, beschreibung, preis, link_thumbnail, link_photo) VALUES ($1, $2, $3, $4, $5) returning *;',
+      [titel, beschreibung, preis, link_thumbnail, link_thumbnail],
+    );
+
+    const p_id = rows[0].p_id;
+
+    const result = await client.query(
+      'INSERT INTO produkt_kategorie (p_id, k_id) VALUES ($1, $2) returning *;',
+      [p_id, kategorie.k_id],
+    );
+
+    //commit transaction
+    await client.query('COMMIT');
+
+    if (result.rows[0]) return rows[0];
+    else return null;
+  } catch (error) {
+    console.log(error.message);
+    client.query('ROLLBACK');
+    return null;
+  } finally {
+    client.release();
+  }
+};
+
+export { getProductsDB, getProductBewertungDb, addProductDB };

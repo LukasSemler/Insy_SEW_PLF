@@ -99,6 +99,7 @@
                               class="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-lg overflow-hidden sm:w-40 sm:h-40"
                             >
                               <img
+                              crossorigin="anonymous"
                                 :src="product.link_thumbnail"
                                 :alt="product.title"
                                 class="w-full h-full object-center object-cover"

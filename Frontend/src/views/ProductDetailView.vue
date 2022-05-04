@@ -111,6 +111,7 @@
       <div class="mt-10 lg:mt-0 lg:col-start-2 lg:row-span-2 lg:self-center">
         <div class="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden">
           <img
+          crossorigin="anonymous"
             :src="productNeu.link_thumbnail"
             :alt="productNeu.titel"
             class="w-full h-full object-center object-cover"

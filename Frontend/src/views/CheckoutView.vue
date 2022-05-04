@@ -442,7 +442,7 @@
             <ul role="list" class="divide-y divide-gray-200">
               <li v-for="product in checkout" :key="product.p_id" class="flex py-6 px-4 sm:px-6">
                 <div class="flex-shrink-0">
-                  <img :src="product.link_thumbnail" :alt="product.titel" class="w-20 rounded-md" />
+                  <img crossorigin="anonymous" :src="product.link_thumbnail" :alt="product.titel" class="w-20 rounded-md" />
                 </div>
 
                 <div class="ml-6 flex-1 flex flex-col">

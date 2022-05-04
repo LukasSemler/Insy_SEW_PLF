@@ -17,12 +17,12 @@
             <img
               class="block lg:hidden h-8 w-auto"
               src="../assets/icons/Logo_klein.png"
-              alt="Workflow"
+              alt="Electronic City"
             />
             <img
               class="hidden lg:block h-8 w-auto"
               src="../assets/icons/Logo2.png"
-              alt="Workflow"
+              alt="Electronic City"
             />
           </div>
           <div class="hidden md:ml-6 md:flex md:space-x-8">
