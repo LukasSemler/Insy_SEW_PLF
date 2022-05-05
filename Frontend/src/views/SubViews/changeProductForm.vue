@@ -25,8 +25,8 @@
                 <CheckCircleIcon class="h-6 w-6 text-green-400" aria-hidden="true" />
               </div>
               <div class="ml-3 w-0 flex-1 pt-0.5">
-                <p class="text-sm font-medium text-gray-900">Successfully added!</p>
-                <p class="mt-1 text-sm text-gray-500">You sent successfully added the product!</p>
+                <p class="text-sm font-medium text-gray-900">Successfully changed!</p>
+                <p class="mt-1 text-sm text-gray-500">You successfully changed the product!</p>
               </div>
               <div class="ml-4 flex-shrink-0 flex">
                 <button
@@ -72,7 +72,7 @@
               <div class="ml-3 w-0 flex-1 pt-0.5">
                 <p class="text-sm font-medium text-gray-900">Error</p>
                 <p class="mt-1 text-sm text-gray-500">
-                  There was an error when sending your message
+                  There was an error when changing the product
                 </p>
               </div>
               <div class="ml-4 flex-shrink-0 flex">
@@ -386,8 +386,14 @@ onMounted(async () => {
   kategorien.value = data;
   console.log(data);
 
+  // Daten holen und ins From laden
   const res = await axios.get(`http://localhost:2410/products/${props.id}`);
   console.log(res.data);
+  state.titel = res.data.titel;
+  state.beschreibung = res.data.beschreibung;
+  state.preis = res.data.preis;
+  state.kategorie = res.data.kategorien[0];
+  image.value = res.data.link_thumbnail;
 });
 
 async function submit(e) {
@@ -396,14 +402,43 @@ async function submit(e) {
     v$.value.$validate();
 
     if (!v$.value.$error) {
-      // Schauen ob ein Image vorhanden ist
-      if (image.value) {
-        // Bild senden
+      let objSenden;
+      console.log('imageSchicken', imageSchicken.value);
+      if (imageSchicken.value) {
+        //Mit Bild schicken
+        objSenden = {
+          titel: state.titel,
+          beschreibung: state.beschreibung,
+          preis: state.preis,
+          kategorie: state.kategorie,
+          link_thumbnail: `http://localhost:2410/images/${state.titel}.${datentyp.value}`,
+        };
+
         await sendImage();
-        await sendData();
+      } else {
+        // Ohne Bild Schicken
+        objSenden = {
+          titel: state.titel,
+          beschreibung: state.beschreibung,
+          preis: state.preis,
+          kategorie: state.kategorie,
+        };
       }
-    } else {
-      console.log('Fehler');
+
+      // Patch
+      const res = await axios.patch(`http://localhost:2410/products/${props.id}`, objSenden);
+      console.log('res', res);
+      if (res.status == 200) {
+        show.value = true;
+        router.push('/');
+      } else {
+        showError.value = true;
+      }
+
+      setTimeout(() => {
+        show.value = false;
+        showError.value = false;
+      }, 5000);
     }
 
     e.preventDefault();
@@ -416,26 +451,6 @@ async function submit(e) {
 }
 
 //#region Bild
-
-async function sendData() {
-  const res = await axios.post('http://localhost:2410/product', {
-    titel: state.titel,
-    beschreibung: state.beschreibung,
-    preis: state.preis,
-    kategorie: getFullKategorie.value[0],
-    link_thumbnail: `http://localhost:2410/images/${state.titel}.${datentyp.value}`,
-  });
-
-  if (res.status == 200) {
-    felderClearen();
-    show.value = true;
-  } else show.value = false;
-
-  setTimeout(() => {
-    show.value = false;
-    showError.value = false;
-  }, 5000);
-}
 
 //Bild hochladen
 function onFileChanged(event) {

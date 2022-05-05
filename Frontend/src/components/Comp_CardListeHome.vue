@@ -19,7 +19,7 @@
             <img
               crossorigin="anonymous"
               :src="product.link_thumbnail"
-              :alt="product.titel"
+              :alt="Math.random() * 100"
               class="w-full h-full object-center object-cover group-hover:opacity-75"
             />
           </div>

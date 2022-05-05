@@ -1,8 +1,34 @@
 import { query, pool } from '../DB/index.js';
 
-const getProductsDB = async () => {
-  const { rows } = await query('SELECT * FROM produkt;');
-  return rows;
+const getProductsDB = async (id) => {
+  if (!id) {
+    const { rows } = await query(`SELECT p.p_id,
+       p.titel,
+       p.beschreibung,
+       p.link_thumbnail,
+       p.preis,
+       array_agg(k.titel ORDER BY k.titel asc) as "kategorien"
+from produkt p
+         join produkt_kategorie pk on p.p_id = pk.p_id
+         join kategorie k on k.k_id = pk.k_id
+GROUP BY p.p_id, p.titel, p.beschreibung, p.link_thumbnail, p.preis`);
+    return rows;
+  } else {
+    const { rows } = await query(
+      `SELECT p.p_id,
+       p.titel,
+       p.beschreibung,
+       p.link_thumbnail,
+       p.preis,
+       array_agg(k.titel ORDER BY k.titel asc) as "kategorien"
+from produkt p
+         join produkt_kategorie pk on p.p_id = pk.p_id
+         join kategorie k on k.k_id = pk.k_id where p.p_id = $1
+GROUP BY p.p_id, p.titel, p.beschreibung, p.link_thumbnail, p.preis`,
+      [id],
+    );
+    return rows[0];
+  }
 };
 
 const getProductBewertungDb = async (id) => {
@@ -96,4 +122,32 @@ const deleteProductDB = async (p_id) => {
   }
 };
 
-export { getProductsDB, getProductBewertungDb, addProductDB, deleteProductDB };
+const patchProductDB = async (id, body) => {
+  try {
+    if (body.link_thumbnail) {
+      const { rows } = await query(
+        'UPDATE produkt SET titel = $1, beschreibung = $2, preis = $3, link_thumbnail = $4 where p_id = $5 returning *;',
+        [body.titel, body.beschreibung, body.preis, body.link_thumbnail, id],
+      );
+
+      console.log('rows', rows);
+
+      return rows[0];
+    } else {
+      const { rows } = await query(
+        'UPDATE produkt SET titel = $1, beschreibung = $2, preis = $3 where p_id = $4 returning *;',
+        [body.titel, body.beschreibung, body.preis, id],
+      );
+
+      console.log('rows', rows);
+
+      return rows[0];
+    }
+  } catch (error) {
+    console.log(error.message);
+
+    return null;
+  }
+};
+
+export { getProductsDB, getProductBewertungDb, addProductDB, deleteProductDB, patchProductDB };

@@ -6,6 +6,7 @@ import {
   thumbnail,
   addProduct,
   deleteProduct,
+  patchProduct,
 } from '../Controllers/products.js';
 import { sendContact } from '../Controllers/contact.js';
 import { login, register, changePW } from '../Controllers/kunde.js';
@@ -20,6 +21,8 @@ router.get('/', (req, res) => res.status(200).send('Test'));
 
 //Product routes
 router.get('/products', asyncHandler(getProducts));
+router.get('/products/:id', asyncHandler(getProducts));
+router.patch('/products/:id', asyncHandler(patchProduct));
 router.get('/productBewertung/:id', asyncHandler(getProductBewertung));
 
 //Contact

@@ -7,6 +7,7 @@ import {
   getProductBewertungDb,
   addProductDB,
   deleteProductDB,
+  patchProductDB,
 } from '../Models/productsDB.js';
 
 const dirname = path.resolve();
@@ -38,7 +39,9 @@ const validateAddProduct = validator({
 });
 
 const getProducts = async (req, res) => {
-  res.status(200).json(await getProductsDB());
+  const { id } = req.params;
+  if (!id) res.status(200).json(await getProductsDB());
+  else res.status(200).json(await getProductsDB(id));
 };
 
 const getProductBewertung = async (req, res) => {
@@ -111,4 +114,19 @@ const deleteProduct = async (req, res) => {
   return res.status(400).send('Fehler beim Löschen');
 };
 
-export { getProducts, getProductBewertung, thumbnail, addProduct, deleteProduct };
+const patchProduct = async (req, res) => {
+  const { id } = req.params;
+  const { body } = req;
+
+  console.log('body', body);
+
+  const erg = await patchProductDB(id, body);
+
+  if (erg) {
+    res.status(200).send('product wurde geändert');
+  } else {
+    res.status(400).send('Es ist ein Fehler beim ändern des productes aufgetreten');
+  }
+};
+
+export { getProducts, getProductBewertung, thumbnail, addProduct, deleteProduct, patchProduct };

@@ -2,6 +2,10 @@ GET http://localhost:2410/products
 
 #############
 
+GET http://localhost:2410/products/1
+
+############
+
 
 POST http://localhost:2410/contact
 Content-Type: application/json
