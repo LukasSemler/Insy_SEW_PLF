@@ -80,10 +80,9 @@
             </a> -->
             <button
               @click="deleteProduct(product)"
-              class="my-2 inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              :class="`my-2 inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white ${color} ${colorHover} `"
             >
-              <TrashIcon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-              Delete
+              {{ textButton }}
             </button>
           </div>
         </div>
@@ -93,9 +92,17 @@
 </template>
 
 <script setup>
-import { TrashIcon, CheckCircleIcon, XIcon } from '@heroicons/vue/outline';
+import { CheckCircleIcon, XIcon } from '@heroicons/vue/outline';
 import axios from 'axios';
 import { ref } from 'vue';
+import router from '../../../Backend/Router/routes';
+
+const props = defineProps({
+  color: String,
+  textButton: String,
+  colorHover: String,
+  status: String,
+});
 
 let products = ref([]);
 let show = ref(false);
@@ -105,14 +112,20 @@ products.value = data;
 
 async function deleteProduct(product) {
   try {
-    const res = await axios.delete(`http://localhost:2410/product/${product.p_id}`);
-    if (res.status == 200) {
-      products.value = products.value.filter((p) => p.p_id !== product.p_id);
-      show.value = true;
+    // Schauen ob der Status Delete ist
+    if (props.status == 'delete') {
+      const res = await axios.delete(`http://localhost:2410/product/${product.p_id}`);
+      if (res.status == 200) {
+        products.value = products.value.filter((p) => p.p_id !== product.p_id);
+        show.value = true;
 
-      setTimeout(() => {
-        show.value = false;
-      }, 5000);
+        setTimeout(() => {
+          show.value = false;
+        }, 5000);
+      }
+    } else {
+      console.log('Change a Product');
+      router.push('/account/changeproductForm');
     }
   } catch (error) {
     console.log(error);

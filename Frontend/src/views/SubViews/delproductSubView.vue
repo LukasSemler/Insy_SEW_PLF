@@ -38,7 +38,7 @@
           <div class="divide-y divide-gray-200 lg:col-span-9">
             <h1 class="text-center text-3xl mt-3">Delete a product</h1>
             <Suspense>
-              <template #default><CompCardListDelete></CompCardListDelete></template>
+              <template #default><CompCardListDeleteChange color="bg-red-500" colorHover="hover:bg-red-600" textButton="Delete" status="delete"></CompCardListDeleteChange></template>
               <template #fallback><h1 class="text-center text-3xl">Loading...</h1></template>
             </Suspense>
           </div>
@@ -60,7 +60,7 @@ import {
 } from '@heroicons/vue/outline';
 import { computed } from 'vue';
 import { PiniaStore } from '../../Store/store.js';
-import CompCardListDelete from '../../components/CompCardListDelete.vue';
+import CompCardListDeleteChange from '../../components/CompCardListDeleteChange.vue';
 
 const store = PiniaStore();
 

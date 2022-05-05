@@ -14,7 +14,7 @@ dotenv.config();
 const dirname = path.resolve();
 const app = express();
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 2410;
 
 app.use(morgan('dev'));
 app.use(helmet());

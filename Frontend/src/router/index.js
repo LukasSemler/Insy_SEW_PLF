@@ -15,6 +15,7 @@ import uebersichtSubView from '../views/SubViews/uebersichtSubView.vue';
 import accountSubView from '../views/SubViews/accountSubView.vue';
 import historySubView from '../views/SubViews/historySubView.vue';
 import passwordSubView from '../views/SubViews/passwordSubView.vue';
+import changeProductForm from '../views/SubViews/changeProductForm.vue';
 
 import addProductSubView from '../views/SubViews/addProductSubView.vue';
 import delProductSubView from '../views/SubViews/delproductSubView.vue';
@@ -81,6 +82,7 @@ const router = createRouter({
         { path: 'addProduct', component: addProductSubView },
         { path: 'delProduct', component: delProductSubView },
         { path: 'changeproduct', component: changeProductSubView },
+        { path: 'changeproductForm', component: changeProductForm },
       ],
       component: AccountView,
       beforeEnter: (to, from, next) => {
