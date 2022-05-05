@@ -23,6 +23,7 @@ export const PiniaStore = defineStore('electronicCity', {
     getAktivenUser() {
       return this.aktiverUser;
     },
+    
   },
   //Actions
   actions: {
