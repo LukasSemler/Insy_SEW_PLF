@@ -82,7 +82,7 @@ const router = createRouter({
         { path: 'addProduct', component: addProductSubView },
         { path: 'delProduct', component: delProductSubView },
         { path: 'changeproduct', component: changeProductSubView },
-        { path: 'changeproductForm', component: changeProductForm },
+        { path: 'changeproductForm/:id', component: changeProductForm, props: true },
       ],
       component: AccountView,
       beforeEnter: (to, from, next) => {

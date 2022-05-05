@@ -95,7 +95,8 @@
 import { CheckCircleIcon, XIcon } from '@heroicons/vue/outline';
 import axios from 'axios';
 import { ref } from 'vue';
-import router from '../../../Backend/Router/routes';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const props = defineProps({
   color: String,
@@ -125,7 +126,7 @@ async function deleteProduct(product) {
       }
     } else {
       console.log('Change a Product');
-      router.push('/account/changeproductForm');
+      router.push(`/account/changeproductForm/${product.p_id}`);
     }
   } catch (error) {
     console.log(error);

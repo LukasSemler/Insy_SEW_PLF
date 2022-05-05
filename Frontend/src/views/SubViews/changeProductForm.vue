@@ -323,9 +323,7 @@
         </div>
       </div>
     </div>
-
-    {{ state.kategorie }}
-    {{ getFullKategorie[0] }}
+    {{ id }}
   </main>
 </template>
 
@@ -356,6 +354,10 @@ const kategorien = ref([]);
 const show = ref(false);
 const showError = ref(false);
 
+const props = defineProps({
+  id: String,
+});
+
 const state = reactive({
   titel: '',
   beschreibung: '',
@@ -383,6 +385,9 @@ onMounted(async () => {
   const { data } = await axios.get('http://localhost:2410/categories');
   kategorien.value = data;
   console.log(data);
+
+  const res = await axios.get(`http://localhost:2410/products/${props.id}`);
+  console.log(res.data);
 });
 
 async function submit(e) {
