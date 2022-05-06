@@ -36,7 +36,7 @@
           </aside>
 
           <div class="divide-y divide-gray-200 lg:col-span-9">
-            <h1 class="text-center text-3xl mt-3">Change a product</h1>
+            <h1 class="text-center text-3xl mt-3 font-bold">Change a product</h1>
             <Suspense>
               <template #default
                 ><CompCardListDeleteChange
@@ -46,7 +46,14 @@
                   status="change"
                 ></CompCardListDeleteChange
               ></template>
-              <template #fallback><h1 class="text-center text-3xl">Loading...</h1></template>
+              <template #fallback>
+                <!-- <div class="flex">
+                  <div class="justify-center">
+                    <img src="../assets/icons/loading.svg" alt="" />
+                  </div>
+                </div> -->
+                <h1 class="text-center text-4xl text-lime-500">Loading</h1>
+              </template>
             </Suspense>
           </div>
         </div>

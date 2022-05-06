@@ -6,7 +6,11 @@
         <Comp_CardListeHome></Comp_CardListeHome>
       </template>
       <template #fallback>
-        <h1>Loading</h1>
+        <div class="flex">
+          <div class="justify-center">
+            <img src="../assets/icons/loading.svg" alt="" />
+          </div>
+        </div>
       </template>
     </Suspense>
   </div>

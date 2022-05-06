@@ -108,6 +108,7 @@ const props = defineProps({
 let products = ref([]);
 let show = ref(false);
 
+// eslint-disable-next-line
 const { data } = await axios.get('http://localhost:2410/products');
 products.value = data;
 
