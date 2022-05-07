@@ -6,9 +6,10 @@
         <Comp_CardListeHome></Comp_CardListeHome>
       </template>
       <template #fallback>
-        <div class="flex">
-          <div class="justify-center">
+        <div class="flex justify-center">
+          <div class="">
             <img src="../assets/icons/loading.svg" alt="" />
+            <h1 class="text-center text-4xl font-bold overline">Loading...</h1>
           </div>
         </div>
       </template>

@@ -150,4 +150,42 @@ const patchProductDB = async (id, body) => {
   }
 };
 
-export { getProductsDB, getProductBewertungDb, addProductDB, deleteProductDB, patchProductDB };
+const getProductKundeBewertungDb = async (knd_id, id) => {
+  try {
+    const { rows } = await query(
+      `SELECT bs.bs_id, bp_id, p_id, k_id
+from bestellung bs
+         join bestellung_produkt bp on bs.bs_id = bp.bs_id
+where k_id = $1
+  and p_id = $2`,
+      [knd_id, id],
+    );
+
+    if (rows[0]) return rows[0];
+    else return null;
+  } catch (error) {
+    console.log('error', error.message);
+  }
+};
+
+const addProductBewertungDB = async (titel, beschreibung, rating, knd_id, id) => {
+  try {
+    const { rows } = await query(
+      'INSERT INTO bewertung (titel, beschreibung, anzahl_sterne, p_id, k_id) VALUES ($1, $2, $3, $4, $5) returning *;',
+      [titel, beschreibung, rating, id, knd_id],
+    );
+
+    if (rows[0]) return rows[0];
+    else return null;
+  } catch (error) {}
+};
+
+export {
+  getProductsDB,
+  getProductBewertungDb,
+  addProductDB,
+  deleteProductDB,
+  patchProductDB,
+  getProductKundeBewertungDb,
+  addProductBewertungDB,
+};

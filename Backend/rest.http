@@ -99,3 +99,20 @@ Content-Type: application/json
   "kategorie": { "k_id": 3, "titel": "Samsung" },
   "link_thumbnail": "/images/iphone13promax.png"
 }
+
+############
+GET http://localhost:2410/productBewertung/6?knd_id=1
+
+#########
+
+
+POST http://localhost:2410/productBewertung/1
+Content-Type: application/json
+
+{
+  "titel": "Test",
+  "beschreibung": "Das ist ein Test",
+  "rating": "5",
+  "knd_id": "1",
+  "p_id": "1"
+}

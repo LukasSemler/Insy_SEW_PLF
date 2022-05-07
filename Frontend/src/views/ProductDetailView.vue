@@ -1,4 +1,6 @@
 <template>
+  
+
   <!-- Success Ding anzeigen -->
   <!-- Global notification live region, render this permanently at the end of the document -->
   <div
@@ -111,7 +113,7 @@
       <div class="mt-10 lg:mt-0 lg:col-start-2 lg:row-span-2 lg:self-center">
         <div class="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden">
           <img
-          crossorigin="anonymous"
+            crossorigin="anonymous"
             :src="productNeu.link_thumbnail"
             :alt="productNeu.titel"
             class="w-full h-full object-center object-cover"
@@ -176,12 +178,16 @@ import { CheckIcon, StarIcon } from '@heroicons/vue/solid';
 import { ShieldCheckIcon, XIcon } from '@heroicons/vue/outline';
 import { CheckCircleIcon } from '@heroicons/vue/outline';
 
+
+
 // Component Imports
 import Comp_Bewertungen from '../components/Comp_Bewertungen.vue';
 
 // Store imports
 import { PiniaStore } from '../Store/Store.js';
 const store = PiniaStore();
+
+
 
 const router = useRouter();
 

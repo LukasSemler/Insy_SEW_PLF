@@ -8,6 +8,8 @@ import {
   addProductDB,
   deleteProductDB,
   patchProductDB,
+  getProductKundeBewertungDb,
+  addProductBewertungDB,
 } from '../Models/productsDB.js';
 
 const dirname = path.resolve();
@@ -38,6 +40,29 @@ const validateAddProduct = validator({
   },
 });
 
+const validateAddReview = validator({
+  required: true,
+  type: 'object',
+  properties: {
+    titel: {
+      required: true,
+      type: 'string',
+    },
+    beschreibung: {
+      required: true,
+      type: 'string',
+    },
+    rating: {
+      required: true,
+      type: 'string',
+    },
+    knd_id: {
+      required: true,
+      type: 'number',
+    },
+  },
+});
+
 const getProducts = async (req, res) => {
   const { id } = req.params;
   if (!id) res.status(200).json(await getProductsDB());
@@ -46,12 +71,23 @@ const getProducts = async (req, res) => {
 
 const getProductBewertung = async (req, res) => {
   const { id } = req.params;
+  const { knd_id } = req.query;
+  console.log(knd_id, id);
 
-  const result = await getProductBewertungDb(id);
+  if (!knd_id) {
+    const result = await getProductBewertungDb(id);
 
-  if (!result.bewertungen) res.status(404).send('Es konnte keine Bewertungen gefunden werden');
+    if (!result.bewertungen)
+      return res.status(404).send('Es konnte keine Bewertungen gefunden werden');
 
-  res.status(200).json(result);
+    return res.status(200).json(result);
+  } else {
+    const result = await getProductKundeBewertungDb(knd_id, id);
+
+    if (!result) return res.status(404).send('Es konnte keine Bewertungen gefunden werden');
+
+    return res.status(200).json(result);
+  }
 };
 
 const addProduct = async (req, res) => {
@@ -78,7 +114,7 @@ const thumbnail = async (req, res) => {
     res.status(200).send('Success');
   } catch (error) {
     console.log(error);
-    res.status(400).send('Something went wrong');
+    res.status(404).send('Something went wrong');
   }
 };
 
@@ -129,4 +165,27 @@ const patchProduct = async (req, res) => {
   }
 };
 
-export { getProducts, getProductBewertung, thumbnail, addProduct, deleteProduct, patchProduct };
+const postProductBewertung = async (req, res) => {
+  if (!validateAddReview(req.body)) return res.status(400).send(validateAddReview.errors);
+
+  const { id } = req.params;
+  const { titel, beschreibung, rating, knd_id} = req.body;
+
+  const result = await addProductBewertungDB(titel, beschreibung, rating, knd_id, id);
+
+  if (result) {
+    res.status(200).json(result);
+  } else {
+    res.status(400).send('Es ist ein Fehler beim hinzufügen der Bewertung aufgetreten');
+  }
+};
+
+export {
+  getProducts,
+  getProductBewertung,
+  thumbnail,
+  addProduct,
+  deleteProduct,
+  patchProduct,
+  postProductBewertung,
+};
